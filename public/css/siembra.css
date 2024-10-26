@@ -1,0 +1,109 @@
+/* Imagen de fondo en el body */
+body {
+    background: url('/imgs/casa_maya1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Difuminado sobre la imagen de fondo */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo semi-transparente */
+    backdrop-filter: blur(7px); /* Efecto de difuminado más suave */
+    z-index: -1;
+}
+
+/* Contenedor del formulario 
+.container {
+    max-width: 600px;
+    margin: 0 auto; 
+    padding: 30px;
+    background-color: #ffffff; 
+    border-radius: 8px; 
+    border: 1px solid #ddd; 
+    position: relative;
+    z-index: 1;
+}
+*/
+
+
+/* Título del formulario */
+h1 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+/* Etiquetas de los campos */
+.form-label {
+    font-weight: bold;
+    color: #555;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+/* Estilo para los campos de entrada */
+.form-control {
+    border: 2px solid #ddd; /* Borde más definido */
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+    transition: border 0.3s ease-in-out;
+}
+
+/* Efectos para los campos al hacer focus */
+.form-control:focus {
+    border-color: #28a745; /* Borde verde al enfocarse */
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.2); /* Sombra alrededor del campo */
+}
+
+/* Ajustes generales */
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+/* Estilo para el botón */
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Efecto hover en el botón */
+.btn-success:hover {
+    background-color: #218838;
+    transform: translateY(-3px); /* Levanta el botón al hacer hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 10% auto;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-success {
+        padding: 12px 18px;
+        font-size: 1rem;
+    }
+}

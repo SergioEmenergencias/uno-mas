@@ -1,0 +1,24 @@
+<div class="container my-5">
+        <h2 class="text-center mb-4">{{titulo}}</h2>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        {{#each columnNames}}
+                            <th>{{this}}</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each rows}}
+                        <tr>
+                            {{#each ../columnNames}}
+                                <td>{{lookup ../this this}}</td>
+                            {{/each}}
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>

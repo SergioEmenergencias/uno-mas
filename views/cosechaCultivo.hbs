@@ -1,0 +1,66 @@
+<div class="container my-5">
+        <h2 class="text-center mb-4">Registrar Cosecha de Cultivo</h2>
+        
+        <!-- Formulario para registrar cosecha de cultivo -->
+        <form action="/cosecha" method="POST">
+            
+            <!-- Campo para la fecha y hora -->
+            <div class="mb-3">
+                <label for="fecha_hora" class="form-label">Fecha y Hora</label>
+                <input type="datetime-local" class="form-control" id="fecha_hora" name="fecha_hora" required>
+            </div>
+
+            <!-- Campo para el ID del cultivo -->
+            <div class="mb-3">
+                <select name="id_cultivo" id="id_cultivo" required>
+            <option value="">Seleccione un cultivo</option>
+            {{#each cultivos}}
+            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
+            {{/each}}
+        </select>
+            </div>
+
+            <!-- Campo para las cajas producidas de primera clase -->
+            <div class="mb-3">
+                <label for="cajas_primera" class="form-label">Cajas Producción Primera Clase</label>
+                <input type="number" class="form-control" id="cajas_primera" name="cajas_primera" placeholder="Ingresa la cantidad de cajas de primera clase" required>
+            </div>
+
+            <!-- Campo para las cajas producidas de segunda clase -->
+            <div class="mb-3">
+                <label for="cajas_segunda" class="form-label">Cajas Producción Segunda Clase</label>
+                <input type="number" class="form-control" id="cajas_segunda" name="cajas_segunda" placeholder="Ingresa la cantidad de cajas de segunda clase" required>
+            </div>
+
+            <!-- Campo para las cajas producidas de tercera clase -->
+            <div class="mb-3">
+                <label for="cajas_tercera" class="form-label">Cajas Producción Tercera Clase</label>
+                <input type="number" class="form-control" id="cajas_tercera" name="cajas_tercera" placeholder="Ingresa la cantidad de cajas de tercera clase" required>
+            </div>
+
+            <!-- Campo para el encargado -->
+            <div class="mb-3">
+                <label for="encargado" class="form-label">Encargado</label>
+                <input type="text" class="form-control" id="encargado" name="encargado" placeholder="Nombre del encargado" required>
+            </div>
+
+            <!-- Campo para el cliente -->
+            <div class="mb-3">
+                <label for="cliente" class="form-label">Cliente</label>
+                <input type="text" class="form-control" id="cliente" name="cliente" placeholder="Nombre del cliente" required>
+            </div>
+
+            <!-- Campo para el total en Quetzales -->
+            <div class="mb-3">
+                <label for="total_quetzales" class="form-label">Total en Quetzales</label>
+                <input type="number" step="0.01" class="form-control" id="total_quetzales" name="total_quetzales" placeholder="Ingresa el total en Quetzales" required>
+            </div>
+
+            <!-- Botón de envío -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">Registrar Cosecha</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

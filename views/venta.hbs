@@ -1,0 +1,127 @@
+<head>
+    <link href="../css/venta.css" rel="stylesheet">
+</head>
+
+<div class="container my-5">
+    <!-- Formulario para registrar ventas -->
+
+    <form action="/venta" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
+
+        
+        <!-- Título del formulario -->
+        <h1 class="text-center mb-4">Registrar Venta</h1>
+
+        <!-- Campo para la fecha de venta -->
+        <div class="mb-3">
+            <label for="fecha_venta" class="form-label">Fecha de la Venta</label>
+            <input type="date" class="form-control" id="fecha_venta" name="fecha_venta" required>
+        </div>
+
+        <!-- Campo para el ID del cultivo -->
+        <div class="mb-3">
+            <label for="id_cultivo" class="form-label">Código del Cultivo</label>
+            <select class="form-control" id="id_cultivo" name="id_cultivo" required>
+                <option value="" disabled selected>Selecciona el código del cultivo</option>
+                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados desde la base de datos -->
+               {{#each cultivos}}
+            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
+            {{/each}}
+            </select>
+        </div>
+
+        <!-- Campo para el nombre del cultivo -->
+        <div class="mb-3">
+            <label for="nombre_cultivo" class="form-label">Nombre del Cultivo</label>
+            <input type="text" class="form-control" id="nombre_cultivo" name="nombre_cultivo" readonly placeholder="El nombre del cultivo será llenado automáticamente">
+        </div>
+
+        <!-- Campo para cajas vendidas de primera clase -->
+        <div class="mb-3">
+            <label for="cajas_primera" class="form-label">Cajas Vendidas (Primera Clase)</label>
+            <input type="number" class="form-control" id="cajas_primera" name="cajas_primera" placeholder="Ingresa la cantidad de cajas de primera clase" required>
+        </div>
+
+        <!-- Campo para el precio de caja de primera clase -->
+        <div class="mb-3">
+            <label for="precio_caja_primera" class="form-label">Precio por Caja (Primera Clase)</label>
+            <input type="number" step="0.01" class="form-control" id="precio_caja_primera" name="precio_caja_primera" placeholder="Ingresa el precio por caja de primera clase" required>
+        </div>
+
+        <!-- Campo para cajas vendidas de segunda clase -->
+        <div class="mb-3">
+            <label for="cajas_segunda" class="form-label">Cajas Vendidas (Segunda Clase)</label>
+            <input type="number" class="form-control" id="cajas_segunda" name="cajas_segunda" placeholder="Ingresa la cantidad de cajas de segunda clase" required>
+        </div>
+
+        <!-- Campo para el precio de caja de segunda clase -->
+        <div class="mb-3">
+            <label for="precio_caja_segunda" class="form-label">Precio por Caja (Segunda Clase)</label>
+            <input type="number" step="0.01" class="form-control" id="precio_caja_segunda" name="precio_caja_segunda" placeholder="Ingresa el precio por caja de segunda clase" required>
+        </div>
+
+        <!-- Campo para cajas vendidas de tercera clase -->
+        <div class="mb-3">
+            <label for="cajas_tercera" class="form-label">Cajas Vendidas (Tercera Clase)</label>
+            <input type="number" class="form-control" id="cajas_tercera" name="cajas_tercera" placeholder="Ingresa la cantidad de cajas de tercera clase" required>
+        </div>
+
+        <!-- Campo para el precio de caja de tercera clase -->
+        <div class="mb-3">
+            <label for="precio_caja_tercera" class="form-label">Precio por Caja (Tercera Clase)</label>
+            <input type="number" step="0.01" class="form-control" id="precio_caja_tercera" name="precio_caja_tercera" placeholder="Ingresa el precio por caja de tercera clase" required>
+        </div>
+
+        <!-- Campo para el total de ventas (calculado automáticamente) -->
+        <div class="mb-3">
+            <label for="total_ventas" class="form-label">Total de Ventas (Q)</label>
+            <input type="text" class="form-control" id="total_ventas" name="total_ventas" readonly>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Registrar Venta</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Función para calcular el total de ventas
+    function calcularTotalVentas() {
+        // Obtener los valores de los campos
+        const cajasPrimera = parseFloat(document.getElementById('cajas_primera').value) || 0;
+        const precioCajaPrimera = parseFloat(document.getElementById('precio_caja_primera').value) || 0;
+        const cajasSegunda = parseFloat(document.getElementById('cajas_segunda').value) || 0;
+        const precioCajaSegunda = parseFloat(document.getElementById('precio_caja_segunda').value) || 0;
+        const cajasTercera = parseFloat(document.getElementById('cajas_tercera').value) || 0;
+        const precioCajaTercera = parseFloat(document.getElementById('precio_caja_tercera').value) || 0;
+
+        // Calcular el total de ventas
+        const totalVentas = (cajasPrimera * precioCajaPrimera) + (cajasSegunda * precioCajaSegunda) + (cajasTercera * precioCajaTercera);
+
+        // Actualizar el campo de total de ventas
+        document.getElementById('total_ventas').value = `Q ${totalVentas.toFixed(2)}`;
+    }
+
+    // Añadir eventos para calcular el total de ventas cuando los campos cambian
+    document.getElementById('cajas_primera').addEventListener('input', calcularTotalVentas);
+    document.getElementById('precio_caja_primera').addEventListener('input', calcularTotalVentas);
+    document.getElementById('cajas_segunda').addEventListener('input', calcularTotalVentas);
+    document.getElementById('precio_caja_segunda').addEventListener('input', calcularTotalVentas);
+    document.getElementById('cajas_tercera').addEventListener('input', calcularTotalVentas);
+    document.getElementById('precio_caja_tercera').addEventListener('input', calcularTotalVentas);
+
+    // Aquí puedes agregar lógica para obtener el nombre del cultivo automáticamente basado en el ID seleccionado
+    document.getElementById('id_cultivo').addEventListener('change', function() {
+        // Ejemplo de código para rellenar automáticamente el nombre del cultivo (esto debería venir de la base de datos)
+        const nombreCultivos = {
+            1: 'Tomate',
+            2: 'Chile'
+        };
+
+        const selectedId = document.getElementById('id_cultivo').value;
+        document.getElementById('nombre_cultivo').value = nombreCultivos[selectedId] || '';
+    });
+</script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

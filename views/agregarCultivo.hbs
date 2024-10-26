@@ -1,0 +1,72 @@
+ <div class="container my-5">
+        <h2 class="text-center mb-4">Registrar Nuevo Cultivo</h2>
+
+        <!-- Formulario para registrar cultivo -->
+        <form action="/agregarCultivo" method="POST">
+            
+            <!-- Campo para el ID del cultivo -->
+            <div class="mb-3">
+                <label for="id_cultivo" class="form-label">Nombre corto para el cultivo </label>
+                <input type="text" class="form-control" id="id_cultivo" name="id_cultivo" placeholder="Ingresa el ID del cultivo" required>
+            </div>
+
+            <!-- Campo para el tipo de cultivo -->
+            <div class="mb-3">
+                <select name="id_cultivo" id="id_cultivo" required>
+            <option value="">Seleccione un cultivo</option>
+            {{#each cultivos}}
+            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
+            {{/each}}
+        </select>
+            </div>
+
+            <!-- Campo para la variedad del cultivo -->
+            <div class="mb-3">
+                <label for="variedad" class="form-label">Variedad</label>
+                <input type="text" class="form-control" id="variedad" name="variedad" placeholder="Ingresa la variedad del cultivo" required>
+            </div>
+
+            <!-- Campo para la extensión cultivada -->
+            <div class="mb-3">
+                <label for="extension_cultivada" class="form-label">Extensión Cultivada (en hectáreas)</label>
+                <input type="number" step="0.01" class="form-control" id="extension_cultivada" name="extension_cultivada" placeholder="Ingresa la extensión cultivada" required>
+            </div>
+
+            <!-- Campo para el tipo de infraestructura -->
+            <div class="mb-3">
+                <label for="tipo_infraestructura" class="form-label">Tipo de Infraestructura</label>
+                <input type="text" class="form-control" id="tipo_infraestructura" name="tipo_infraestructura" placeholder="Ingresa el tipo de infraestructura" required>
+            </div>
+
+            <!-- Campo para la fecha de siembra -->
+            <div class="mb-3">
+                <label for="fecha_siembra" class="form-label">Fecha de Siembra</label>
+                <input type="date" class="form-control" id="fecha_siembra" name="fecha_siembra" required>
+            </div>
+
+            <!-- Campo para la edad del cultivo -->
+            <div class="mb-3">
+                <label for="edad_cultivo" class="form-label">Edad del Cultivo (en años)</label>
+                <input type="number" step="0.1" class="form-control" id="edad_cultivo" name="edad_cultivo" placeholder="Ingresa la edad del cultivo" required>
+            </div>
+
+            <!-- Campo para enfermedades -->
+            <div class="mb-3">
+                <label for="enfermedades" class="form-label">Enfermedades</label>
+                <input type="text" class="form-control" id="enfermedades" name="enfermedades" placeholder="Ingresa las enfermedades (si las hay)">
+            </div>
+
+            <!-- Campo para el número de cajas producidas -->
+            <div class="mb-3">
+                <label for="cajas_producidas" class="form-label">Cajas Producidas</label>
+                <input type="number" class="form-control" id="cajas_producidas" name="cajas_producidas" placeholder="Ingresa el número de cajas producidas" required>
+            </div>
+
+            <!-- Botón de envío -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">Registrar Cultivo</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

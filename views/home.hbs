@@ -1,0 +1,72 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    <link href="../css/home.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Incluir el Navbar -->
+    {{> Navbar}}
+
+    <h1 class="text-center mb-4" style="color: #2e7d32;">Bienvenido al sistema de agricultura de presición</h1>
+    <!-- Carrusel debajo del Navbar -->
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                aria-label="Slide 3"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+                aria-label="Slide 4"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4"
+                aria-label="Slide 5"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="5"
+                aria-label="Slide 6"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="../imgs/cultivo_chile.jpg" class="d-block w-100" alt="Imagen 1"
+                    style="height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="../imgs/cultivo_chile2.jpg" class="d-block w-100" alt="Imagen 2"
+                    style="height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="../imgs/casa_maya1.jpg" class="d-block w-100" alt="Imagen 3"
+                    style="height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="../imgs/cultivo_chile5.jpg" class="d-block w-100" alt="Imagen 3"
+                    style="height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="../imgs/cultivo_tomate8.jpg" class="d-block w-100" alt="Imagen 3"
+                    style="height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="../imgs/cultivo_tomate3.jpg" class="d-block w-100" alt="Imagen 3"
+                    style="height: 500px; object-fit: cover;">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+</body>

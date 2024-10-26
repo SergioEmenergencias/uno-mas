@@ -1,0 +1,148 @@
+<head>
+    <link href="../css/preparacionTerreno.css" rel="stylesheet">
+</head>
+
+<div class="container my-5">
+    <!-- Formulario para registrar preparación de terreno -->
+
+    <form action="/preparacionTerreno" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
+
+
+        
+        <!-- Título del formulario -->
+        <h1 class="text-center mb-4">Preparación de Terreno</h1>
+
+        <!-- Campo para la fecha de preparación -->
+        <div class="mb-3">
+            <label for="fecha_preparacion" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="fecha_preparacion" name="fecha_preparacion" required>
+        </div>
+
+        <!-- Campo para el ID del cultivo -->
+        <div class="mb-3">
+            <label for="id_cultivo" class="form-label">Código del Cultivo</label>
+            <select class="form-control" id="id_cultivo" name="id_cultivo" required>
+                <option value="" disabled selected>Selecciona el código del cultivo</option>
+                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados desde la base de datos -->
+                 {{#each cultivos}}
+            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
+            {{/each}}
+            </select>
+        </div>
+
+
+        <!-- Campo para la actividad -->
+        <div class="mb-3">
+            <label for="actividad" class="form-label">Actividad</label>
+            <input type="text" class="form-control" id="actividad" name="actividad" placeholder="Descripción de la actividad realizada" required>
+        </div>
+
+        <!-- Campo para los insumos utilizados -->
+        <div class="mb-3">
+            <label for="insumos_utilizados" class="form-label">Insumos Utilizados</label>
+            <input type="text" class="form-control" id="insumos_utilizados" name="insumos_utilizados" placeholder="Especifica los insumos utilizados" required>
+        </div>
+
+        <!-- Campo para la cantidad de insumos -->
+        <div class="mb-3">
+            <label for="cantidad_insumos" class="form-label">Cantidad de Insumos</label>
+            <input type="number" class="form-control" id="cantidad_insumos" name="cantidad_insumos" placeholder="Ingresa la cantidad de insumos utilizados" required>
+        </div>
+
+        <!-- Campo para el costo de los insumos -->
+        <div class="mb-3">
+            <label for="costo_insumos" class="form-label">Costo por Insumo</label>
+            <input type="number" step="0.01" class="form-control" id="costo_insumos" name="costo_insumos" placeholder="Ingresa el costo por insumo" required>
+        </div>
+
+        <!-- Campo para el total de inversión (calculado automáticamente) -->
+        <div class="mb-3">
+            <label for="total_inversion" class="form-label">Total de Inversión</label>
+            <input type="text" class="form-control" id="total_inversion" name="total_inversion" readonly>
+        </div>
+
+        <!-- Campo para la cantidad de jornales -->
+        <div class="mb-3">
+            <label for="jornales" class="form-label">Jornales</label>
+            <input type="number" class="form-control" id="jornales" name="jornales" placeholder="Ingresa la cantidad de jornales" required>
+        </div>
+
+        <!-- Campo para el costo por jornal -->
+        <div class="mb-3">
+            <label for="costo_jornal" class="form-label">Costo por Jornal</label>
+            <input type="number" step="0.01" class="form-control" id="costo_jornal" name="costo_jornal" placeholder="Ingresa el costo por jornal" required>
+        </div>
+
+        <!-- Campo para el total de jornales (calculado automáticamente) -->
+        <div class="mb-3">
+            <label for="total_jornales" class="form-label">Total Jornales</label>
+
+            <input type="text" class="form-control" id="costo_total" name="total_jornales" readonly>
+
+        </div>
+
+        <!-- Campo para el total de gastos (calculado automáticamente) -->
+        <div class="mb-3">
+            <label for="total_gastos" class="form-label">Total de Gastos</label>
+
+            <input type="text" class="form-control" id="costo_total" name="costo_total" readonly>
+
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Registrar Preparación de Terreno</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Función para calcular el total de inversión
+    function calcularTotalInversion() {
+        const cantidadInsumos = parseFloat(document.getElementById('cantidad_insumos').value) || 0;
+        const costoInsumos = parseFloat(document.getElementById('costo_insumos').value) || 0;
+
+        const totalInversion = cantidadInsumos * costoInsumos;
+        document.getElementById('total_inversion').value = `Q ${totalInversion.toFixed(2)}`;
+        calcularTotalGastos(); // Llamar a la función para calcular el total de gastos
+    }
+
+    // Función para calcular el total de jornales
+    function calcularTotalJornales() {
+        const jornales = parseFloat(document.getElementById('jornales').value) || 0;
+        const costoJornal = parseFloat(document.getElementById('costo_jornal').value) || 0;
+
+        const totalJornales = jornales * costoJornal;
+        document.getElementById('total_jornales').value = `Q ${totalJornales.toFixed(2)}`;
+        calcularTotalGastos(); // Llamar a la función para calcular el total de gastos
+    }
+
+    // Función para calcular el total de gastos
+    function calcularTotalGastos() {
+        const totalInversion = parseFloat(document.getElementById('total_inversion').value.replace('Q ', '')) || 0;
+        const totalJornales = parseFloat(document.getElementById('total_jornales').value.replace('Q ', '')) || 0;
+
+        const totalGastos = totalInversion + totalJornales;
+        document.getElementById('total_gastos').value = `Q ${totalGastos.toFixed(2)}`;
+    }
+
+    // Añadir eventos para calcular los totales cuando los campos cambian
+    document.getElementById('cantidad_insumos').addEventListener('input', calcularTotalInversion);
+    document.getElementById('costo_insumos').addEventListener('input', calcularTotalInversion);
+    document.getElementById('jornales').addEventListener('input', calcularTotalJornales);
+    document.getElementById('costo_jornal').addEventListener('input', calcularTotalJornales);
+
+    // Lógica para obtener el nombre del cultivo automáticamente según el ID seleccionado
+    document.getElementById('id_cultivo').addEventListener('change', function() {
+        const nombreCultivos = {
+            1: 'Tomate',
+            2: 'Chile'
+        };
+
+        const selectedId = document.getElementById('id_cultivo').value;
+        document.getElementById('nombre_cultivo').value = nombreCultivos[selectedId] || '';
+    });
+</script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

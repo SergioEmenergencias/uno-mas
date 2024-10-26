@@ -1,0 +1,94 @@
+<head>
+    <link href="../css/siembra.css" rel="stylesheet">
+</head>
+
+<div class="container my-5">
+    <!-- Formulario para registrar cultivo -->
+
+    <form action="/siembra" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
+
+        <!-- Título del formulario -->
+        <h1 class="text-center mb-4">Registrar Siembra</h1>
+
+        <!-- Campo para el ID del cultivo -->
+        <div class="mb-3">
+            <label for="id_cultivo" class="form-label">Código de Cultivo</label>
+            <select class="form-control" id="id_cultivo" name="id_cultivo" required>
+                <option value="" disabled selected>Selecciona el código del cultivo</option>
+                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados -->
+                 {{#each cultivos}}
+            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
+            {{/each}}
+            </select>
+        </div>
+
+        <!-- Campo para la fecha de siembra -->
+        <div class="mb-3">
+            <label for="fecha_siembra" class="form-label">Fecha de Siembra</label>
+            <input type="date" class="form-control" id="fecha_siembra" name="fecha_siembra" required>
+        </div>
+
+        <!-- Campo para la cantidad de pilones -->
+        <div class="mb-3">
+            <label for="cantidad_pilones" class="form-label">Cantidad de Pilones</label>
+            <input type="number" class="form-control" id="cantidad_pilones" name="cantidad_pilones" placeholder="Ingresa la cantidad de pilones" required>
+        </div>
+
+        <!-- Campo para el costo del pilón -->
+        <div class="mb-3">
+            <label for="costo_pilon" class="form-label">Costo por Pilón</label>
+
+            <input type="number" step="0.01" class="form-control" id="costo" name="costo" placeholder="Ingresa el costo por pilón" required>
+
+        </div>
+
+        <!-- Campo para la cantidad de jornales -->
+        <div class="mb-3">
+            <label for="cantidad_jornales" class="form-label">Cantidad de Jornales</label>
+            <input type="number" class="form-control" id="cantidad_jornales" name="cantidad_jornales" placeholder="Ingresa la cantidad de jornales" required>
+        </div>
+
+        <!-- Campo para el costo del jornal -->
+        <div class="mb-3">
+            <label for="costo_jornal" class="form-label">Costo por Jornal</label>
+            <input type="number" step="0.01" class="form-control" id="costo_jornal" name="costo_jornal" placeholder="Ingresa el costo por jornal" required>
+        </div>
+
+        <!-- Campo para el costo total (calculado automáticamente) -->
+        <div class="mb-3">
+            <label for="costo_total" class="form-label">Costo Total</label>
+            <input type="text" class="form-control" id="costo_total" name="costo_total" readonly>
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Registrar Siembra</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Función para calcular el costo total
+    function calcularCostoTotal() {
+        // Obtener los valores de los campos
+        const cantidadPilones = parseFloat(document.getElementById('cantidad_pilones').value) || 0;
+        const costoPilon = parseFloat(document.getElementById('costo_pilon').value) || 0;
+        const cantidadJornales = parseFloat(document.getElementById('cantidad_jornales').value) || 0;
+        const costoJornal = parseFloat(document.getElementById('costo_jornal').value) || 0;
+
+        // Calcular el costo total
+        const costoTotal = (cantidadPilones * costoPilon) + (cantidadJornales * costoJornal);
+
+        // Actualizar el campo de costo total
+        document.getElementById('costo_total').value = `Q ${costoTotal.toFixed(2)}`;
+    }
+
+    // Añadir eventos para calcular el costo total cuando los campos cambian
+    document.getElementById('cantidad_pilones').addEventListener('input', calcularCostoTotal);
+    document.getElementById('costo_pilon').addEventListener('input', calcularCostoTotal);
+    document.getElementById('cantidad_jornales').addEventListener('input', calcularCostoTotal);
+    document.getElementById('costo_jornal').addEventListener('input', calcularCostoTotal);
+</script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

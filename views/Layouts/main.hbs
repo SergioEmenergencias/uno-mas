@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{title}}</title>
+
+  <!-- CSS -->
+  <link href="../css/style.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+ {{> Header}}
+
+  <div class="container mt-3">
+    {{{body}}}
+
+    <div id="successPopup" class="alert alert-success" style="display: {{#if successMessage}}block{{else}}none{{/if}};">
+      <div id="popupMessage">{{successMessage}}</div>
+    </div>
+
+    <div id="errorPopup" class="alert alert-danger" style="display: {{#if errorMessage}}block{{else}}none{{/if}};">
+      <div id="errorMessage">{{errorMessage}}</div>
+    </div>
+
+
+    <!--  <button id="showSuccessBtn" class="btn btn-success">Mostrar Éxito</button>
+            <button id="showErrorBtn" class="btn btn-danger">Mostrar Error</button>-->
+    {{#if successMessage}}
+    <script>
+      document.getElementById('successPopup').style.display = 'block';
+      document.getElementById('popupMessage').textContent = '{{successMessage}}';
+      // Ocultar el mensaje de éxito después de 3 segundos
+      setTimeout(() => {
+        document.getElementById('successPopup').style.display = 'none';
+      }, 3000);
+    </script>
+    {{/if}}
+
+    {{#if errorMessage}}
+    <script>
+      document.getElementById('errorPopup').style.display = 'block';
+      document.getElementById('errorMessage').textContent = '{{errorMessage}}';
+      // Ocultar el mensaje de error después de 3 segundos
+      setTimeout(() => {
+        document.getElementById('errorPopup').style.display = 'none';
+      }, 3000);
+    </script>
+    {{/if}}
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="../app/app.js"></script>
+  
+</body>

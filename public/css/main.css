@@ -1,0 +1,28 @@
+
+footer a:hover {
+  color: #ddd;
+  /* Color de los enlaces al pasar el cursor */
+  text-decoration: none;
+  /* Evitar el subrayado */
+}
+
+footer i {
+  font-size: 1.5rem;
+  /* Ajustar el tamaño de los iconos de redes sociales */
+}
+
+footer .list-unstyled li {
+  margin-bottom: 5px;
+}
+
+p.small {
+  margin-bottom: 0px;
+}
+/* Evitar que el dropdown se salga de la pantalla */
+.dropdown-menu {
+max-width: 250px; /* Ajusta el ancho máximo del menú */
+overflow-wrap: break-word; /* Permite que el texto largo se ajuste en el menú */
+right: 0; /* Asegura que el menú no se salga de la pantalla a la derecha */
+left: auto; /* Desactiva la alineación a la izquierda */
+}
+

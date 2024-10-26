@@ -1,0 +1,186 @@
+<h1>Foros</h1>
+
+
+<!-- Formulario para crear un nuevo post -->
+<form action="/foros" method="POST">
+    <input type="text" name="pregunta" placeholder="Título del Post" required>
+    <textarea name="contexto" placeholder="Contexto o detalles del Post" required></textarea>
+    <button type="submit">Crear Post</button>
+</form>
+
+<hr>
+
+<!-- Mostrar todos los posts -->
+{{#each foros}}
+    <div class="post">
+        <h3>{{this.pregunta}}</h3>
+        <p><strong>Publicado por:</strong> {{this.usuario}} <strong>en:</strong> {{this.fecha}}</p>
+        <p>{{this.contexto}}</p>
+
+        <!-- Formulario para agregar una respuesta -->
+        <form action="/foros/{{this._id}}/respuestas" method="POST">
+            <textarea name="texto" placeholder="Escribe una respuesta" required></textarea>
+            <button type="submit">Responder</button>
+        </form>
+
+        <!-- Botón para mostrar/ocultar respuestas -->
+        <button class="toggle-respuestas" data-post-id="{{this._id}}">Mostrar respuestas</button>
+
+        <!-- Contenedor de respuestas (inicialmente oculto) -->
+        <div id="respuestas-{{this._id}}" class="respuestas" style="display: none;">
+            {{#if this.respuestas.length}}
+                <h4>Respuestas:</h4>
+                {{#each this.respuestas}}
+                    <div class="respuesta">
+                        <p>{{this.texto}}</p>
+                        <p><strong>Respondido por:</strong> {{this.usuario}} <strong>el:</strong> {{this.fecha}}</p>
+                    </div>
+                {{/each}}
+            {{else}}
+                <p>No hay respuestas aún.</p>
+            {{/if}}
+        </div>
+    </div>
+    <hr>
+{{/each}}
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: #ddd;
+            margin: 40px 0;
+        }
+
+        .post {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .post h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .post p {
+            color: #555;
+        }
+
+        .toggle-respuestas {
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            text-align: left;
+            padding: 0;
+            font-size: 14px;
+        }
+
+        .toggle-respuestas:hover {
+            text-decoration: underline;
+        }
+
+        .respuestas {
+            margin-top: 20px;
+        }
+
+        .respuesta {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-left: 3px solid #007bff;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .respuesta p {
+            margin: 5px 0;
+        }
+
+        .respuesta strong {
+            color: #007bff;
+        }
+
+        @media (max-width: 768px) {
+            form, .post {
+                margin: 10px;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            input[type="text"], textarea {
+                font-size: 14px;
+            }
+        }
+    </style>
+<!-- Agregar el script para manejar el despliegue de las respuestas -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const botones = document.querySelectorAll('.toggle-respuestas');
+        
+        botones.forEach(boton => {
+            boton.addEventListener('click', () => {
+                const postId = boton.getAttribute('data-post-id');
+                const respuestasDiv = document.getElementById(`respuestas-${postId}`);
+                
+                if (respuestasDiv.style.display === 'none') {
+                    respuestasDiv.style.display = 'block';
+                    boton.textContent = 'Ocultar respuestas';
+                } else {
+                    respuestasDiv.style.display = 'none';
+                    boton.textContent = 'Mostrar respuestas';
+                }
+            });
+        });
+    });
+</script>

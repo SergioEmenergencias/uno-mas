@@ -1,0 +1,78 @@
+ <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="/principal">Home</a>
+
+          <!-- Menú desplegable para "Cultivos" -->
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Cultivos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/agregarCultivo">Agregar Cultivo</a></li>
+              <li><a class="dropdown-item" href="/Acciones">Realizar Actividades</a></li>
+              <li><a class="dropdown-item" href="/cosecha">Cosecha</a></li>
+              <li><a class="dropdown-item" href="/tablaCosecha">Mis cosechas</a></li>
+              <li><a class="dropdown-item" href="/tablaCultivo">Mis cultivos</a></li>
+              <li><a class="dropdown-item" href="/informacioCultivo"> Informe Cultivo</a></li>
+              <li><a class="dropdown-item" href="/preparacionTerreno">Preparando la tierra</a></li>
+              <li><a class="dropdown-item" href="/siembra">Siembra</a></li>
+              <li><a class="dropdown-item" href="/fertilizacion">fertilizacion</a></li>
+              <li><a class="dropdown-item" href="/Enfermedades">Enfermedades</a></li>
+              <li><a class="dropdown-item" href="/produccion">Produccion</a></li>
+              <li><a class="dropdown-item" href="/venta">A vender</a></li>
+              <li><a class="dropdown-item" href="/tablas">tablitas</a></li>
+            </ul>
+          </div>
+
+          <a class="nav-item nav-link" href="/Foros">Foros</a>
+          <a class="nav-item nav-link" href="/publicandoymas">A la venta</a>
+          <a class="nav-item nav-link" href="/auth/logout">Cerrar Sesión</a>
+        </div>
+
+        <!-- Mostrar el nombre y correo del usuario autenticado -->
+        <div class="ms-auto navbar-nav">
+          <a class="nav-item nav-link">Usuario: {{user.userName}}</a>
+          <a class="nav-item nav-link">Correo: {{user.email}}</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+    <!-- Aquí podrías incluir otros elementos del encabezado -->
+    
+    {{#if messages.length}}
+        <div class="alert alert-danger" id="errorPopup" style="display: block;">
+            {{#each messages}}
+                <p>{{this}}</p>
+            {{/each}}
+            <script>
+                // Mostrar el popup de error y ocultarlo después de 3 segundos
+                setTimeout(() => {
+                    document.getElementById('errorPopup').style.display = 'none';
+                }, 3000);
+            </script>
+        </div>
+    {{/if}}
+
+    {{#if success.length}}
+        <div class="alert alert-success" id="successPopup" style="display: block;">
+            {{#each success}}
+                <p>{{this}}</p>
+            {{/each}}
+            <script>
+                // Mostrar el popup de éxito y ocultarlo después de 3 segundos
+                setTimeout(() => {
+                    document.getElementById('successPopup').style.display = 'none';
+                }, 3000);
+            </script>
+        </div>
+    {{/if}}
+</header>
+

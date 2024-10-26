@@ -1,0 +1,63 @@
+body {
+    background-color: #e8f5e9;
+    align-items: center;
+}
+
+.btn {
+    background-color: #388e3c;
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #2e7d32;
+}
+
+.form-control {
+    border-radius: 0.25rem;
+}
+
+/* Estilos específicos para la vista home */
+.galeria img {
+    max-width: 150px;
+    height: auto;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.single-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.publicaciones .card {
+    margin-bottom: 20px;
+}
+
+/* Estilos para el formulario de subir archivos */
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+button.btn-success {
+    background-color: #388e3c;
+    border: none;
+}
+
+button.btn-success:hover {
+    background-color: #2e7d32;
+}
+
+/* Mostrar el dropdown al pasar el mouse */
+.navbar-nav .dropdown:hover .dropdown-menu {
+    display: block;
+}
+

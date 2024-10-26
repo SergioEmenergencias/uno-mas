@@ -1,0 +1,136 @@
+<head>
+    <link href="../css/enfermedades.css" rel="stylesheet">
+</head>
+
+<div class="container my-5">
+    <!-- Formulario para registrar manejo de plagas y enfermedades -->
+
+    <form action="/Enfermedades" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
+
+        
+        <!-- Título del formulario -->
+        <h1 class="text-center mb-4">Manejo de Plagas y Enfermedades</h1>
+
+        <!-- Campo para el ID del cultivo -->
+        <div class="mb-3">
+            <label for="id_cultivo" class="form-label">Código del Cultivo</label>
+            <select class="form-control" id="id_cultivo" name="id_cultivo" required>
+                <option value="" disabled selected>Selecciona el código del cultivo</option>
+                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados desde la base de datos -->
+                 {{#each cultivos}}
+            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
+            {{/each}}
+            </select>
+        </div>
+
+        <!-- Campo para el nombre del cultivo -->
+        <div class="mb-3">
+            <label for="nombre_cultivo" class="form-label">Nombre del Cultivo</label>
+            <input type="text" class="form-control" id="nombre_cultivo" name="nombre_cultivo" readonly placeholder="El nombre del cultivo será llenado automáticamente">
+        </div>
+
+        <!-- Campo para la ubicación -->
+        <div class="mb-3">
+            <label for="ubicacion" class="form-label">Ubicación</label>
+            <input type="text" class="form-control" id="ubicacion" name="ubicacion" placeholder="Ingresa la ubicación" required>
+        </div>
+
+        <!-- Campo para el nombre de la enfermedad o plaga -->
+        <div class="mb-3">
+            <label for="nombre_plaga_enfermedad" class="form-label">Nombre de la Enfermedad o Plaga</label>
+
+            <input type="text" class="form-control" id="enfermedad" name="enfermedad" placeholder="Ingresa el nombre de la plaga o enfermedad" required>
+
+        </div>
+
+        <!-- Campo para el insumo utilizado -->
+        <div class="mb-3">
+            <label for="insumo_utilizado" class="form-label">Insumo Utilizado</label>
+
+            <input type="text" class="form-control" id="insumoUtilizado" name="insumoUtilizado" placeholder="Ingresa el insumo utilizado" required>
+
+        </div>
+
+        <!-- Campo para el costo del insumo -->
+        <div class="mb-3">
+            <label for="costo_insumo" class="form-label">Costo del Insumo</label>
+            <input type="number" step="0.01" class="form-control" id="costoInsumo" name="costoInsumo" placeholder="Ingresa el costo del insumo" required>
+
+        </div>
+
+        <!-- Campo para la cantidad de insumos -->
+        <div class="mb-3">
+            <label for="cantidad_insumo" class="form-label">Cantidad de Insumos</label>
+
+            <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Ingresa la cantidad de insumos" required>
+
+        </div>
+
+        <!-- Campo para la cantidad de jornales -->
+        <div class="mb-3">
+            <label for="cantidad_jornales" class="form-label">Cantidad de Jornales</label>
+
+            <input type="number" class="form-control" id="jornales" name="jornales" placeholder="Ingresa la cantidad de jornales" required>
+
+        </div>
+
+        <!-- Campo para el costo del jornal -->
+        <div class="mb-3">
+            <label for="costo_jornal" class="form-label">Costo por Jornal</label>
+
+            <input type="number" step="0.01" class="form-control" id="costoJornal" name="costoJornal" placeholder="Ingresa el costo por jornal" required>
+
+        </div>
+
+        <!-- Campo para el costo total (calculado automáticamente) -->
+        <div class="mb-3">
+            <label for="costo_total" class="form-label">Costo Total</label>
+
+            <input type="text" class="form-control" id="costoTotal" name="costoTotal" readonly>
+
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Registrar Manejo de Plagas/Enfermedades</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Función para calcular el costo total
+    function calcularCostoTotal() {
+        // Obtener los valores de los campos
+        const cantidadInsumo = parseFloat(document.getElementById('cantidad_insumo').value) || 0;
+        const costoInsumo = parseFloat(document.getElementById('costo_insumo').value) || 0;
+        const cantidadJornales = parseFloat(document.getElementById('cantidad_jornales').value) || 0;
+        const costoJornal = parseFloat(document.getElementById('costo_jornal').value) || 0;
+
+        // Calcular el costo total
+        const costoTotal = (cantidadInsumo * costoInsumo) + (cantidadJornales * costoJornal);
+
+        // Actualizar el campo de costo total
+        document.getElementById('costo_total').value = `Q ${costoTotal.toFixed(2)}`;
+    }
+
+    // Añadir eventos para calcular el costo total cuando los campos cambian
+    document.getElementById('cantidad_insumo').addEventListener('input', calcularCostoTotal);
+    document.getElementById('costo_insumo').addEventListener('input', calcularCostoTotal);
+    document.getElementById('cantidad_jornales').addEventListener('input', calcularCostoTotal);
+    document.getElementById('costo_jornal').addEventListener('input', calcularCostoTotal);
+
+    // Aquí puedes agregar lógica para obtener el nombre del cultivo automáticamente basado en el ID seleccionado
+    document.getElementById('id_cultivo').addEventListener('change', function() {
+        // Ejemplo de código para rellenar automáticamente el nombre del cultivo (esto debería venir de la base de datos)
+        const nombreCultivos = {
+            1: 'Tomate',
+            2: 'Chile'
+        };
+
+        const selectedId = document.getElementById('id_cultivo').value;
+        document.getElementById('nombre_cultivo').value = nombreCultivos[selectedId] || '';
+    });
+</script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

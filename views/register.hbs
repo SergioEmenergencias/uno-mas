@@ -1,0 +1,39 @@
+
+<div class="container-fluid vh-100 d-flex justify-content-center align-items-center" style="background-color: #e8f5e9;">
+    <div class="row bg-white rounded shadow-lg" style="max-width: 900px; width: 100%;">
+        <!-- Imagen del lado izquierdo -->
+        <div class="col-md-6 d-none d-md-block p-0">
+            <img src="/imgs/Agricultura.png" alt="Register Image" class="img-fluid h-100 rounded-start" style="object-fit: cover; height: 100%;">
+        </div>
+        <!-- Formulario de registro del lado derecho -->
+        <div class="col-md-6 p-5 d-flex flex-column justify-content-center">
+            <h3 class="mb-4 text-center" style="color: #2e7d32;">Regístrate</h3>
+            <p class="text-center mb-4">Crea tu cuenta o <a href="/auth/">Inicia sesión</a></p>
+            <form action="/auth/register" method="POST">
+                <div class="form-group mb-3">
+                    <label for="username" class="form-label"><i class="fas fa-user"></i> Nombre de usuario</label>
+                    <input type="text" class="form-control" id="userName" name="userName" placeholder="Ingresa tu nombre de usuario" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="email" class="form-label"><i class="fas fa-envelope"></i> Correo electrónico</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Ingresa tu correo electrónico" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="tel" class="form-label"><i class="fas fa-phone"></i> Numero de telefono</label>
+                    <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ingresa tu numero de telefono" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password" class="form-label"><i class="fas fa-lock"></i> Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="confirm-password" class="form-label"><i class="fas fa-lock"></i> Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="confirm-password" name="confirm-password" placeholder="Confirma tu contraseña" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn text-white" style="background-color: #388e3c;">Registrarse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

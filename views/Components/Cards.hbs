@@ -1,0 +1,124 @@
+<article class="card">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    <h2>{{this.name}}</h2>
+    <div class="galeria">
+        {{#each this.Imagen}}
+            <!-- Usa una función JavaScript para mostrar la imagen en un modal al hacer clic -->
+            <img src="{{this}}" alt="Imagen de la publicación" onclick="openModal('{{this}}')">
+        {{/each}}
+
+        <!-- Mostrar el botón Eliminar solo si es el perfil del usuario -->
+        {{#if isProfile}}
+            <a href="/eliminar/{{this._id}}" class="btn btn-danger">Eliminar</a>
+        {{/if}}
+
+        <!-- Enlace para enviar mensaje -->
+        <a href="https://wa.me/{{this.telefono}}" target="_blank">Enviar mensaje a {{this.user.userName}}</a>
+    </div>
+</article>
+<!-- Modal para visualizar la imagen -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+<style>
+    /* Estilos generales de la tarjeta */
+    .card {
+        margin: 20px auto;
+        padding: 20px;
+        max-width: 800px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Configuración de la galería */
+    .galeria {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        justify-items: center;
+        align-items: center;
+    }
+
+    /* Estilo para las imágenes de la galería */
+    .galeria img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Efecto de hover en la imagen */
+    .galeria img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Estilo del modal */
+    .modal {
+        display: none; /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Ajuste del tamaño de la imagen en el modal para máxima calidad */
+    .modal-content {
+        width: auto;
+        height: auto;
+        max-width: 80vw; /* Máximo 80% del ancho de la ventana */
+        max-height: 80vh; /* Máximo 80% de la altura de la ventana */
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .close {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #bbb;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    // Función para abrir el modal con la imagen seleccionada
+    function openModal(imageUrl) {
+        document.getElementById("imageModal").style.display = "flex";
+        document.getElementById("modalImage").src = imageUrl;
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        document.getElementById("imageModal").style.display = "none";
+    }
+
+    // Cierra el modal al hacer clic fuera de la imagen
+    window.onclick = function(event) {
+        const modal = document.getElementById("imageModal");
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+</script>
