@@ -1,3 +1,4 @@
+// Archivo principal de configuración para la aplicación Express
 const express = require('express');
 const { create } = require('express-handlebars');
 const session = require('express-session');
@@ -8,88 +9,85 @@ const cors = require('cors');
 const mongosanitize = require('express-mongo-sanitize');
 const mongoStore = require('connect-mongo');
 const { connectMongoDB } = require('./db/sqlMongoose');
+const Handlebars = require('handlebars');
+
 require('dotenv').config();
 require('./db/sqlMongoose');
 
 const app = express();
+
+// CORS configuration
 app.use(cors({
     credentials: true,
     origin: process.env.PATHRENDER || '*',
     methods: ['GET', 'POST']
 }));
-// Configuración de la sesión
+
+// Session configuration
 app.use(session({
     secret: '52D5FA11-9E49-49D4-A0FD-394E0D0FE98E',
     resave: false,
     saveUninitialized: false,
-    name: "secret-name-yolo", // Nombre personalizado para la cookie de la sesión
+    name: "secret-name-yolo",
     store: mongoStore.create({
-        clientPromise: connectMongoDB,  // Promesa de conexión a MongoDB
-        dbName: process.env.BD_NAME  // Nombre de la base de datos
+        clientPromise: connectMongoDB,
+        dbName: process.env.BD_NAME
     }),
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // Solo en HTTPS en producción
-        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 días de duración
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 30 * 24 * 60 * 60 * 1000
     }
 }));
 
+// Flash messages
 app.use(flash());
 
-// Inicialización de Passport
+// Handlebars helper for date formatting
+Handlebars.registerHelper('formatDate', function(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().slice(0, 10); // Returns "YYYY-MM-DD"
+});
+
+// Passport initialization
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser((user, done) => done(null, { id: user._id, userName: user.userName }));
-
 passport.deserializeUser(async (user, done) => {
     try {
         const userdb = await User.findById(user.id);
-        if (!userdb) {
-            console.log(userdb)
-            return done(new Error('User not found'));
-        }
+        if (!userdb) return done(new Error('User not found'));
         return done(null, { id: userdb._id, username: userdb.userName });
     } catch (error) {
         return done(error);
     }
 });
 
-// Configuración de Handlebars
+// Handlebars configuration
 const hbs = create({
     extname: 'hbs',
-    layoutsDir: 'Views/Layouts', // Esta debe ser una cadena
-    partialsDir: 'Views/Components', // También debe ser una cadena
-    defaultLayout: 'main' // Nombre del archivo de layout sin la extensión
+    layoutsDir: 'views/Layouts',
+    partialsDir: 'views/Components',
+    defaultLayout: 'main'
 });
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
-app.set('views', './Views');
+app.set('views', './views');
 
-
-
-app.engine('hbs', hbs.engine);
-app.set('view engine', 'hbs');
-app.set('views', './Views');
-
-
-// Middleware para leer datos del formulario
+// Middleware for form data and JSON
 app.use(express.urlencoded({ extended: false }));
-
-
-
-// Middleware para manejar JSON
 app.use(express.json());
 
-// Rutas principales
+// Routes configuration
 app.use('/auth', require('./Routes/authRoutes'));
 app.use('/', require('./Routes/homeRoutes'));
 
-
-// Archivos estáticos
+// Static files
 app.use(express.static(__dirname + '/public'));
 
-// Levantar el servidor
-const PORT = process.env.PORT || 3000; // Default por si falta la variable PORT
+// Server listening
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Escuchando en el puerto http://localhost:${PORT}/auth/login`);
+    console.log(`Server running at http://localhost:${PORT}/`);
 });

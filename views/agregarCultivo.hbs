@@ -1,72 +1,112 @@
- <div class="container my-5">
-        <h2 class="text-center mb-4">Registrar Nuevo Cultivo</h2>
 
-        <!-- Formulario para registrar cultivo -->
-        <form action="/agregarCultivo" method="POST">
-            
-            <!-- Campo para el ID del cultivo -->
-            <div class="mb-3">
-                <label for="id_cultivo" class="form-label">Nombre corto para el cultivo </label>
-                <input type="text" class="form-control" id="id_cultivo" name="id_cultivo" placeholder="Ingresa el ID del cultivo" required>
-            </div>
+<head>
+    <link href="../css/agregarCultivo.css" rel="stylesheet">
+</head>
 
-            <!-- Campo para el tipo de cultivo -->
-            <div class="mb-3">
-                <select name="id_cultivo" id="id_cultivo" required>
-            <option value="">Seleccione un cultivo</option>
-            {{#each cultivos}}
-            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
-            {{/each}}
-        </select>
-            </div>
 
-            <!-- Campo para la variedad del cultivo -->
-            <div class="mb-3">
-                <label for="variedad" class="form-label">Variedad</label>
-                <input type="text" class="form-control" id="variedad" name="variedad" placeholder="Ingresa la variedad del cultivo" required>
-            </div>
+<div class="container my-5">
 
-            <!-- Campo para la extensión cultivada -->
-            <div class="mb-3">
-                <label for="extension_cultivada" class="form-label">Extensión Cultivada (en hectáreas)</label>
-                <input type="number" step="0.01" class="form-control" id="extension_cultivada" name="extension_cultivada" placeholder="Ingresa la extensión cultivada" required>
-            </div>
+    
 
-            <!-- Campo para el tipo de infraestructura -->
-            <div class="mb-3">
-                <label for="tipo_infraestructura" class="form-label">Tipo de Infraestructura</label>
-                <input type="text" class="form-control" id="tipo_infraestructura" name="tipo_infraestructura" placeholder="Ingresa el tipo de infraestructura" required>
-            </div>
+    <!-- Formulario para registrar cultivo -->
+    <form action="/agregarCultivo" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
 
-            <!-- Campo para la fecha de siembra -->
-            <div class="mb-3">
-                <label for="fecha_siembra" class="form-label">Fecha de Siembra</label>
-                <input type="date" class="form-control" id="fecha_siembra" name="fecha_siembra" required>
-            </div>
+        <!-- Título del formulario -->
+        <h1 class="text-center mb-4">Registrar Nuevo Cultivo</h1>
 
-            <!-- Campo para la edad del cultivo -->
-            <div class="mb-3">
-                <label for="edad_cultivo" class="form-label">Edad del Cultivo (en años)</label>
-                <input type="number" step="0.1" class="form-control" id="edad_cultivo" name="edad_cultivo" placeholder="Ingresa la edad del cultivo" required>
-            </div>
 
-            <!-- Campo para enfermedades -->
-            <div class="mb-3">
-                <label for="enfermedades" class="form-label">Enfermedades</label>
-                <input type="text" class="form-control" id="enfermedades" name="enfermedades" placeholder="Ingresa las enfermedades (si las hay)">
-            </div>
+        <!-- Campo para el ID del cultivo -->
+        <div class="mb-3">
+            <label for="id_cultivo" class="form-label">Código de Cultivo</label>
+            <input type="text" class="form-control" id="id_cultivo" name="id_cultivo" placeholder="Ingresa el código del cultivo" required>
+        </div>
 
-            <!-- Campo para el número de cajas producidas -->
-            <div class="mb-3">
-                <label for="cajas_producidas" class="form-label">Cajas Producidas</label>
-                <input type="number" class="form-control" id="cajas_producidas" name="cajas_producidas" placeholder="Ingresa el número de cajas producidas" required>
-            </div>
+        <!-- Campo para el tipo de cultivo -->
+        <div class="mb-3">
+            <label for="tipo_cultivo" class="form-label">Tipo de Cultivo</label>
+            <select class="form-control" id="tipo_cultivo" name="tipo_cultivo" required>
+                <option value="" disabled selected>Selecciona el tipo de cultivo</option>
+                <option value="Tomate">Tomate</option>
+                <option value="Chile">Chile</option>
+            </select>
+        </div>
 
-            <!-- Botón de envío -->
-            <div class="d-grid">
-                <button type="submit" class="btn btn-success">Registrar Cultivo</button>
-            </div>
-        </form>
-    </div>
+        <!-- Campo para la variedad del cultivo -->
+        <div class="mb-3">
+            <label for="variedad" class="form-label">Variedad</label>
+            <input type="text" class="form-control" id="variedad" name="variedad" placeholder="Ingresa la variedad del cultivo" required>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Campo para la extensión cultivada -->
+        <div class="mb-3">
+            <label for="extension_cultivada" class="form-label">Extensión Cultivada</label>
+            <input type="text" step="0.01" class="form-control" id="extension_cultivada" name="extension_cultivada" placeholder="Ingresa la extensión cultivada" required>
+        </div>
+
+        <!-- Campo para el tipo de infraestructura -->
+        <div class="mb-3">
+            <label for="tipo_infraestructura" class="form-label">Tipo de Infraestructura</label>
+            <select class="form-control" id="tipo_infraestructura" name="tipo_infraestructura" required>
+                <option value="" disabled selected>Selecciona el tipo de infraestructura</option>
+                <option value="Macrotunel">Macrotunel</option>
+                <option value="Megatunel">Megatunel</option>
+                <option value="Casa Maya">Casa Maya</option>
+                <option value="Campo Abierto">Campo Abierto</option>
+            </select>
+        </div>
+
+        <!-- Campo para la fecha de siembra -->
+        <div class="mb-3">
+            <label for="fecha_siembra" class="form-label">Fecha de Siembra</label>
+            <input type="date" class="form-control" id="fecha_siembra" name="fecha_siembra" required onchange="calcularEdad()">
+        </div>
+
+        <!-- Campo para la edad del cultivo -->
+        <div class="mb-3">
+            <label for="edad_cultivo" class="form-label">Edad del Cultivo (en días)</label>
+            <input type="text" class="form-control" id="edad_cultivo" name="edad_cultivo" readonly>
+        </div>
+
+        <!-- Campo para la referencia al sector de la siembra -->
+        <div class="mb-3">
+            <label for="sector_siembra" class="form-label">Referencia al Sector de la Siembra</label>
+            <input type="text" class="form-control" id="sector_siembra" name="sector_siembra" placeholder="Ingresa la referencia al sector de la siembra">
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg">Registrar Cultivo</button>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function calcularEdad() {
+        // Obtener la fecha de siembra
+        const fechaSiembra = document.getElementById('fecha_siembra').value;
+
+        if (fechaSiembra) {
+            // Convertir la fecha de siembra a un objeto Date
+            const fechaSiembraDate = new Date(fechaSiembra);
+
+            // Obtener la fecha actual
+            const fechaActual = new Date();
+
+            // Calcular la diferencia en milisegundos entre las dos fechas
+            const diferenciaTiempo = fechaActual - fechaSiembraDate;
+
+            // Convertir la diferencia de milisegundos a días
+            const diferenciaDias = Math.floor(diferenciaTiempo / (1000 * 60 * 60 * 24));
+
+            // Actualizar el campo de la edad del cultivo con la diferencia en días
+            document.getElementById('edad_cultivo').value = diferenciaDias + " días";
+        } else {
+            // Limpiar el campo si no se selecciona una fecha
+            document.getElementById('edad_cultivo').value = "";
+        }
+    }
+</script>
+
+<!-- Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

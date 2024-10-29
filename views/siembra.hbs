@@ -4,9 +4,8 @@
 
 <div class="container my-5">
     <!-- Formulario para registrar cultivo -->
-
     <form action="/siembra" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
-
+        
         <!-- Título del formulario -->
         <h1 class="text-center mb-4">Registrar Siembra</h1>
 
@@ -15,8 +14,7 @@
             <label for="id_cultivo" class="form-label">Código de Cultivo</label>
             <select class="form-control" id="id_cultivo" name="id_cultivo" required>
                 <option value="" disabled selected>Selecciona el código del cultivo</option>
-                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados -->
-                 {{#each cultivos}}
+               {{#each cultivos}}
             <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
             {{/each}}
             </select>
@@ -37,9 +35,7 @@
         <!-- Campo para el costo del pilón -->
         <div class="mb-3">
             <label for="costo_pilon" class="form-label">Costo por Pilón</label>
-
-            <input type="number" step="0.01" class="form-control" id="costo" name="costo" placeholder="Ingresa el costo por pilón" required>
-
+            <input type="number" step="0.01" class="form-control" id="costo_pilon" name="costo_pilon" placeholder="Ingresa el costo por pilón" required>
         </div>
 
         <!-- Campo para la cantidad de jornales -->

@@ -3,5 +3,5 @@ module.exports = (req, res, next) => {
         console.log("yolo",req.user)
         return next();
     }
-    res.redirect("/auth/login/");
+    res.redirect("/auth/login");
 };

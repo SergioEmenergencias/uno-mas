@@ -12,7 +12,7 @@ res.render('preparacionTerreno',{user:req.user})
 const siembra = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
         console.log(result.recordset);
         // Renderiza la vista de siembra y pasa los cultivos
         res.render('siembra', { cultivos: result.recordset, user:req.user });
@@ -26,7 +26,7 @@ const siembra = async (req, res) => {
 const fertilizacion = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos');
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos');
         console.log(result.recordset);
         // Renderiza la vista de fertilización y pasa los cultivos
         res.render('fertilizacion', { cultivos: result.recordset,user:req.user });
@@ -40,7 +40,7 @@ const fertilizacion = async (req, res) => {
 const enfermedades = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos');
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos');
         console.log(result.recordset);
         // Renderiza la vista de enfermedades y pasa los cultivos
         res.render('enfermedades', { cultivos: result.recordset,user:req.user });
@@ -54,7 +54,7 @@ const enfermedades = async (req, res) => {
 const produccion = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos');
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos');
         console.log(result.recordset);
         // Renderiza la vista de producción y pasa los cultivos
         res.render('produccion', { cultivos: result.recordset,user:req.user });
@@ -66,7 +66,7 @@ const produccion = async (req, res) => {
 const venta = async (req, res) => {
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
         console.log(result.recordset)
         // Renderiza la vista de ventas y pasa los cultivos
         res.render('venta', { cultivos: result.recordset ,user:req.user});
@@ -76,9 +76,10 @@ const venta = async (req, res) => {
     }
 };
 
-const cargalogin=(req,res)=>{
-    res.render('login',{messages: req.flash('success'),user:req.user })
-}
+const cargalogin = (req, res) => {
+    res.render('login', { messages: req.flash('success')});
+};
+
 const cargarRegister=(req,res)=>{
     res.render('register',{messages: req.flash('success'),user:req.user })
 }
@@ -98,7 +99,7 @@ const cargarAgregarCulti=(req,res)=>{
 const cargarActividades= async (req,res)=>{
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
         console.log(result.recordset)
         // Renderiza la vista de ventas y pasa los cultivos
         res.render('Actividades', { cultivos: result.recordset ,messages: req.flash('success')});
@@ -115,7 +116,7 @@ const cargarResetPasword=(req,res)=>{
 const cargaformularioCosechas= async(req,res)=>{
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
         console.log(result.recordset)
         // Renderiza la vista de ventas y pasa los cultivos
         res.render('cosechaCultivo', { cultivos: result.recordset ,messages: req.flash('success'),user:req.user});
@@ -128,7 +129,7 @@ const cargaformularioCosechas= async(req,res)=>{
 const cargarFormularioCultivos=async(req,res)=>{
     try {
         const pool = await getConnection();
-        const result = await pool.request().query('SELECT id, cultivo_trabajado FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
+        const result = await pool.request().query('SELECT id, [Cultivo Trabajado] AS cultivo_trabajado  FROM Terrenos'); // Asegúrate de que el nombre de la columna sea el correcto
         console.log(result.recordset)
         // Renderiza la vista de ventas y pasa los cultivos
         res.render('agregarCultivo', { cultivos: result.recordset ,messages: req.flash('success'),user:req.user});

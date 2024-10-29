@@ -1,24 +1,42 @@
-<div class="container my-5">
-        <h2 class="text-center mb-4">{{titulo}}</h2>
-
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
+ <div class="table-responsive">
+        <table class="table table-striped table-bordered table-custom"> <!-- Clase personalizada -->
+            <thead>
+                <tr>
+                    {{#each columnNames}}
+                        <th>{{this}}</th>
+                    {{/each}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#each rows}}
                     <tr>
-                        {{#each columnNames}}
-                            <th>{{this}}</th>
+                        {{#each ../columnNames}}
+                            <td>
+                                {{#if (eq this 'Fecha')}}
+                                    {{formatDate (lookup ../this this)}}
+                                {{else}}
+                                    {{lookup ../this this}}
+                                {{/if}}
+                            </td>
                         {{/each}}
                     </tr>
-                </thead>
-                <tbody>
-                    {{#each rows}}
-                        <tr>
-                            {{#each ../columnNames}}
-                                <td>{{lookup ../this this}}</td>
-                            {{/each}}
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
+                {{/each}}
+            </tbody>
+        </table>
     </div>
+</div>
+ <style>
+        .table-custom {
+            background-color: #f8f9fa; /* Color de fondo */
+            color: #343a40; /* Color del texto */
+        }
+
+        .table-custom th {
+            background-color: #343a40; /* Color del encabezado */
+            color: #ffffff; /* Color del texto del encabezado */
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #e2e3e5; /* Color al pasar el mouse sobre una fila */
+        }
+    </style>

@@ -20,14 +20,8 @@
 
         <!-- Campo para el ID del cultivo -->
         <div class="mb-3">
-            <label for="id_cultivo" class="form-label">Código del Cultivo</label>
-            <select class="form-control" id="id_cultivo" name="id_cultivo" required>
-                <option value="" disabled selected>Selecciona el código del cultivo</option>
-                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados desde la base de datos -->
-                 {{#each cultivos}}
-            <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
-            {{/each}}
-            </select>
+            <label for="Cultivo" class="form-label">Nombre del Cultivo</label>
+            <input type="text" class="form-control" id="cultivo_trabajado" name="cultivo_trabajado" placeholder="Ingresa el nombre del cultivo" required>
         </div>
 
 
@@ -73,20 +67,16 @@
             <input type="number" step="0.01" class="form-control" id="costo_jornal" name="costo_jornal" placeholder="Ingresa el costo por jornal" required>
         </div>
 
-        <!-- Campo para el total de jornales (calculado automáticamente) -->
+         <!-- Campo para el total de jornales (calculado automáticamente) -->
         <div class="mb-3">
             <label for="total_jornales" class="form-label">Total Jornales</label>
-
-            <input type="text" class="form-control" id="costo_total" name="total_jornales" readonly>
-
+            <input type="text" class="form-control" id="total_jornales" name="total_jornales" readonly>
         </div>
 
         <!-- Campo para el total de gastos (calculado automáticamente) -->
         <div class="mb-3">
             <label for="total_gastos" class="form-label">Total de Gastos</label>
-
-            <input type="text" class="form-control" id="costo_total" name="costo_total" readonly>
-
+            <input type="text" class="form-control" id="total_gastos" name="total_gastos" readonly>
         </div>
 
         <!-- Botón de envío -->

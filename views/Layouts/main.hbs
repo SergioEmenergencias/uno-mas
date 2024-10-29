@@ -7,15 +7,163 @@
   <title>{{title}}</title>
 
   <!-- CSS -->
-  <link href="../css/style.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
+  <style>
+    footer a:hover {
+      color: #ddd;
+      /* Color de los enlaces al pasar el cursor */
+      text-decoration: none;
+      /* Evitar el subrayado */
+    }
+
+    footer i {
+      font-size: 1.5rem;
+      /* Ajustar el tamaño de los iconos de redes sociales */
+    }
+
+    footer .list-unstyled li {
+      margin-bottom: 5px;
+    }
+
+    p.small {
+      margin-bottom: 0px;
+    }
+
+    /* Evitar que el dropdown se salga de la pantalla */
+    .dropdown-menu {
+      max-width: 250px;
+      /* Ajusta el ancho máximo del menú */
+      overflow-wrap: break-word;
+      /* Permite que el texto largo se ajuste en el menú */
+      right: 0;
+      /* Asegura que el menú no se salga de la pantalla a la derecha */
+      left: auto;
+      /* Desactiva la alineación a la izquierda */
+    }
+  </style>
 </head>
 
 <body>
 
- {{> Header}}
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+        aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="/principal">Home</a>
+
+          <!-- Menú desplegable para "Cultivos" -->
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCultivos" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Cultivos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownCultivos">
+              <li><a class="dropdown-item" href="/agregarCultivo">Agregar Cultivo</a></li>
+              <li><a class="dropdown-item" href="/tablaCultivo">Mis cultivos</a></li>
+              <li><a class="dropdown-item" href="/tablaCosecha">Mis cosechas</a></li>
+            </ul>
+          </div>
+
+          <!-- Menú desplegable para "Operaciones" -->
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownOperaciones" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Actividades
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownOperaciones">
+              <li><a class="dropdown-item" href="/preparacionTerreno">Preparación de Terreno</a></li>
+              <li><a class="dropdown-item" href="/siembra">Siembra</a></li>
+              <li><a class="dropdown-item" href="/fertilizacion">Fertilización</a></li>
+              <li><a class="dropdown-item" href="/Enfermedades">Manejo de Enfermedades</a></li>
+              <li><a class="dropdown-item" href="/produccion">Producción</a></li>
+            </ul>
+          </div>
+
+          <!-- Menú desplegable para "Reportes" -->
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownReportes" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              Reportes
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownReportes">
+              <li><a class="dropdown-item" href="/informacioCultivo">Informe Cultivo</a></li>
+              <li><a class="dropdown-item" href="/venta">Ventas</a></li>
+            </ul>
+          </div>
+
+          <a class="nav-item nav-link" href="/tablas">tablas</a>
+          <a class="nav-item nav-link" href="/foros">Foros</a>
+
+        </div>
+
+
+
+        <!-- Menú de perfil con opciones -->
+        <div class="ms-auto navbar-nav">
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="perfilDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fas fa-user"></i> Perfil
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+              <li><a class="dropdown-item">Usuario: {{user.userName}}</a></li>
+              <li><a class="dropdown-item">Correo: {{user.email}}</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#changePasswordModal">Cambiar
+                  Contraseña</a></li>
+              <li><a class="dropdown-item" href="/auth/logout">Cerrar Sesión</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Modal para cambiar contraseña -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel"
+          aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="/auth/change-password" method="POST">
+                  <div class="mb-3">
+                    <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
 
   <div class="container mt-3">
     {{{body}}}
@@ -55,9 +203,56 @@
 
   </div>
 
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
   <script src="../app/app.js"></script>
-  
+  <script>
+    document.getElementById('showSuccessBtn').addEventListener('click', function () {
+      // Mostrar un mensaje de éxito de prueba
+      document.getElementById('successPopup').style.display = 'block';
+      document.getElementById('popupMessage').textContent = 'Este es un mensaje de éxito de prueba!';
+      // Ocultar el mensaje de éxito después de 3 segundos
+      setTimeout(() => {
+        document.getElementById('successPopup').style.display = 'none';
+      }, 3000);
+    });
+
+    document.getElementById('showErrorBtn').addEventListener('click', function () {
+      // Mostrar un mensaje de error de prueba
+      document.getElementById('errorPopup').style.display = 'block';
+      document.getElementById('errorMessage').textContent = 'Este es un mensaje de error de prueba!';
+      // Ocultar el mensaje de error después de 3 segundos
+      setTimeout(() => {
+        document.getElementById('errorPopup').style.display = 'none';
+      }, 3000);
+    });
+  </script>
 </body>
+<!-- Footer -->
+<!-- Footer -->
+<footer class="bg-dark text-light py-1 mt-5">
+  <div class="container">
+    <div class="row">
+      <!-- Información de contacto -->
+      <div class="col-md-6">
+        <h6>Contacto</h6> <!-- Cambié el <h5> a <h6> para hacerlo más pequeño -->
+        <p class="small"><i class="bi bi-envelope-fill"></i> Correo: soporte@agricultores.com</p>
+        <p class="small"><i class="bi bi-telephone-fill"></i> Teléfono: +502 1234 5678</p>
+      </div>
+      <!-- Redes sociales -->
+      <div class="text-end col-md-6">
+        <h6>Síguenos</h6> <!-- Cambié el <h5> a <h6> -->
+        <a href="#" class="text-light me-2"><i class="bi bi-facebook"></i></a>
+        <a href="#" class="text-light me-2"><i class="bi bi-twitter"></i></a>
+        <a href="#" class="text-light me-2"><i class="bi bi-instagram"></i></a>
+        <a href="#" class="text-light"><i class="bi bi-whatsapp"></i></a>
+      </div>
+    </div>
+    <!-- Derechos reservados -->
+    <div class="text-center mt-3">
+      <p class="small mb-0">&copy; 2024. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

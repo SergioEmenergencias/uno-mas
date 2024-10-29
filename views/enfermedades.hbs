@@ -4,9 +4,7 @@
 
 <div class="container my-5">
     <!-- Formulario para registrar manejo de plagas y enfermedades -->
-
     <form action="/Enfermedades" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
-
         
         <!-- Título del formulario -->
         <h1 class="text-center mb-4">Manejo de Plagas y Enfermedades</h1>
@@ -16,18 +14,13 @@
             <label for="id_cultivo" class="form-label">Código del Cultivo</label>
             <select class="form-control" id="id_cultivo" name="id_cultivo" required>
                 <option value="" disabled selected>Selecciona el código del cultivo</option>
-                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados desde la base de datos -->
-                 {{#each cultivos}}
+                {{#each cultivos}}
             <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
             {{/each}}
             </select>
         </div>
 
-        <!-- Campo para el nombre del cultivo -->
-        <div class="mb-3">
-            <label for="nombre_cultivo" class="form-label">Nombre del Cultivo</label>
-            <input type="text" class="form-control" id="nombre_cultivo" name="nombre_cultivo" readonly placeholder="El nombre del cultivo será llenado automáticamente">
-        </div>
+
 
         <!-- Campo para la ubicación -->
         <div class="mb-3">
@@ -38,56 +31,43 @@
         <!-- Campo para el nombre de la enfermedad o plaga -->
         <div class="mb-3">
             <label for="nombre_plaga_enfermedad" class="form-label">Nombre de la Enfermedad o Plaga</label>
-
-            <input type="text" class="form-control" id="enfermedad" name="enfermedad" placeholder="Ingresa el nombre de la plaga o enfermedad" required>
-
+            <input type="text" class="form-control" id="nombre_plaga_enfermedad" name="nombre_plaga_enfermedad" placeholder="Ingresa el nombre de la plaga o enfermedad" required>
         </div>
 
         <!-- Campo para el insumo utilizado -->
         <div class="mb-3">
             <label for="insumo_utilizado" class="form-label">Insumo Utilizado</label>
-
-            <input type="text" class="form-control" id="insumoUtilizado" name="insumoUtilizado" placeholder="Ingresa el insumo utilizado" required>
-
+            <input type="text" class="form-control" id="insumo_utilizado" name="insumo_utilizado" placeholder="Ingresa el insumo utilizado" required>
         </div>
 
         <!-- Campo para el costo del insumo -->
         <div class="mb-3">
             <label for="costo_insumo" class="form-label">Costo del Insumo</label>
-            <input type="number" step="0.01" class="form-control" id="costoInsumo" name="costoInsumo" placeholder="Ingresa el costo del insumo" required>
-
+            <input type="number" step="0.01" class="form-control" id="costo_insumo" name="costo_insumo" placeholder="Ingresa el costo del insumo" required>
         </div>
 
         <!-- Campo para la cantidad de insumos -->
         <div class="mb-3">
             <label for="cantidad_insumo" class="form-label">Cantidad de Insumos</label>
-
-            <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Ingresa la cantidad de insumos" required>
-
+            <input type="number" class="form-control" id="cantidad_insumo" name="cantidad_insumo" placeholder="Ingresa la cantidad de insumos" required>
         </div>
 
         <!-- Campo para la cantidad de jornales -->
         <div class="mb-3">
             <label for="cantidad_jornales" class="form-label">Cantidad de Jornales</label>
-
-            <input type="number" class="form-control" id="jornales" name="jornales" placeholder="Ingresa la cantidad de jornales" required>
-
+            <input type="number" class="form-control" id="cantidad_jornales" name="cantidad_jornales" placeholder="Ingresa la cantidad de jornales" required>
         </div>
 
         <!-- Campo para el costo del jornal -->
         <div class="mb-3">
             <label for="costo_jornal" class="form-label">Costo por Jornal</label>
-
-            <input type="number" step="0.01" class="form-control" id="costoJornal" name="costoJornal" placeholder="Ingresa el costo por jornal" required>
-
+            <input type="number" step="0.01" class="form-control" id="costo_jornal" name="costo_jornal" placeholder="Ingresa el costo por jornal" required>
         </div>
 
         <!-- Campo para el costo total (calculado automáticamente) -->
         <div class="mb-3">
             <label for="costo_total" class="form-label">Costo Total</label>
-
-            <input type="text" class="form-control" id="costoTotal" name="costoTotal" readonly>
-
+            <input type="text" class="form-control" id="costo_total" name="costo_total" readonly>
         </div>
 
         <!-- Botón de envío -->

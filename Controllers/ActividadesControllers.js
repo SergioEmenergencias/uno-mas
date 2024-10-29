@@ -50,7 +50,7 @@ async function insertarCosecha(req, res) {
             .input('encargado', sql.VarChar(100), encargado)
             .input('cliente', sql.VarChar(100), cliente)
             .input('total_quetzales', sql.Decimal(10, 2), total_quetzales)
-            .input('id_usuario', sql.VarChar(60), req.user.id)
+            .input('id_usuario', sql.VarChar(50), req.user.id)
             .query(`
                 INSERT INTO Cosechas (fecha_hora, id_cultivo, cajas_primera, cajas_segunda, cajas_tercera, encargado, cliente, total_quetzales, id_usuario)
                 VALUES (@fecha_hora, @id_cultivo, @cajas_primera, @cajas_segunda, @cajas_tercera, @encargado, @cliente, @total_quetzales, @id_usuario)
@@ -75,7 +75,7 @@ async function obtenerCosechas(req, res) {
         }
 
         const result = await pool.request()
-            .input('usuarioId', sql.VarChar(60), userId)  
+            .input('usuarioId', sql.VarChar(50), userId)  
             .query(`SELECT * FROM Cosechas WHERE id_usuario = @usuarioId`);
 
         // Obtenemos los nombres de las columnas y los datos de las cosechas
@@ -124,7 +124,7 @@ async function insertarCultivo(req, res) {
             .input('edad_cultivo', sql.Decimal(4, 1), edad_cultivo) // Edad en años con decimales
             .input('enfermedades', sql.VarChar(255), enfermedades || null) // Enfermedades opcional
             .input('cajas_producidas', sql.Int, cajas_producidas)
-            .input('id_usuario', sql.VarChar(60), req.user.id) // Asegúrate de que req.user.id esté disponible (para obtener el ID del usuario autenticado)
+            .input('id_usuario', sql.VarChar(50), req.user.id) // Asegúrate de que req.user.id esté disponible (para obtener el ID del usuario autenticado)
             .query(`
                 INSERT INTO Cultivos (id_cultivo, tipo_cultivo, variedad, extension_cultivada, tipo_infraestructura, fecha_siembra, edad_cultivo, enfermedades, cajas_producidas, id_usuario)
                 VALUES (@id_cultivo, @tipo_cultivo, @variedad, @extension_cultivada, @tipo_infraestructura, @fecha_siembra, @edad_cultivo, @enfermedades, @cajas_producidas, @id_usuario)
@@ -153,7 +153,7 @@ async function obtenerPlantaciones(req, res) {
         }
 
         const result = await pool.request()
-            .input('usuarioId', sql.VarChar(60), userId)  
+            .input('usuarioId', sql.VarChar(50), userId)  
             .query(`SELECT * FROM Cultivos WHERE id_usuario = @usuarioId`);
 
         // Obtenemos los nombres de las columnas y los datos de las plantaciones
@@ -172,6 +172,7 @@ async function obtenerTodasTablas(req, res) {
     try {
         const pool = await getConnection(); // Obtener la conexión de SQL Server
         const userId = req.user.id; // Asumimos que el ID del usuario está en req.user
+        console.log("ID de usuario:", userId);
 
         if (!userId) {
             return res.status(400).json({ message: "Falta el ID del usuario" });
@@ -179,69 +180,93 @@ async function obtenerTodasTablas(req, res) {
 
         // Obtener Terrenos
         const resultTerrenos = await pool.request()
-            .input('usuarioId', sql.VarChar(60), userId)
-            .query(`SELECT * FROM Terrenos WHERE id_usuario = @usuarioId`);
-        
-        const columnNamesTerrenos = Object.keys(resultTerrenos.recordset[0] || {});
-        const rowsTerrenos = resultTerrenos.recordset;
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT id, [Cultivo Trabajado], Fecha, [Insumos Utilizados], [Cantidad de Insumos], 
+                    [Costo por Insumo], [Total de Inversion], jornales, [Costo por Jornal], Actividad 
+                    FROM Terrenos WHERE id_usuario = @usuarioId`);
+            
+        const rowsTerrenos = resultTerrenos.recordset.map((row, index) => ({
+            índice: index + 1,
+            ...row
+        }));
 
         // Obtener Producción
         const resultProduccion = await pool.request()
-            .input('usuarioId', sql.VarChar(60), userId)
-            .query(`SELECT * FROM Produccion WHERE id_usuario = @usuarioId`);
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT [Id Produccion], Fecha, [Id Cultivo], [Nombre Cultivo], [Cantidad de Jornales], 
+                    [Costo Jornal], [Cantidad de Cajas Primera Clase], [Cantidad de Cajas Segunda Clase], 
+                    [Cantidad de Cajas Tercera Clase] 
+                    FROM Produccion WHERE id_usuario = @usuarioId`);
         
-        const columnNamesProduccion = Object.keys(resultProduccion.recordset[0] || {});
-        const rowsProduccion = resultProduccion.recordset;
+        const rowsProduccion = resultProduccion.recordset.map((row, index) => ({
+            índice: index + 1,
+            ...row
+        }));
 
         // Obtener Fertilización
         const resultFertilizacion = await pool.request()
-        .input('usuarioId', sql.VarChar(60), userId)
-        .query(`SELECT * FROM Fertilizacion WHERE id_usuario = @usuarioId`);
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT [No Fertilizacion], [Fecha Fertilizacion], [Tipo de Fertilizacion], 
+                    [Codigo de Cultivo], [Nombre Cultivo], [Quimico Utilizado], [Costo Quimico], 
+                    [Cantidad de quimico utilizado], [Cantidad de Jornales], [Costo por Jornal] 
+                    FROM Fertilizacion WHERE id_usuario = @usuarioId`);
     
-        const columnNamesFertilizacion = Object.keys(resultFertilizacion.recordset[0] || {});
-        const rowsFertilizacion = resultFertilizacion.recordset;
+        const rowsFertilizacion = resultFertilizacion.recordset.map((row, index) => ({
+            índice: index + 1,
+            ...row
+        }));
 
-        //Obtener Siembra
+        // Obtener Siembra
         const resultSiembra = await pool.request()
-        .input('usuarioId', sql.VarChar(60), userId)
-        .query(`SELECT * FROM Siembra WHERE id_usuario = @usuarioId`);
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT [id siembra], [Fecha Siembra], [Id Cultivo], [Nombre Cultivo], 
+                    [Cantidad de Pilones], [Costo por Pilón], [Cantidad de Jornales], [Costo por Jornal] 
+                    FROM Siembra WHERE id_usuario = @usuarioId`);
     
-        const columnNamesSiembra = Object.keys(resultSiembra.recordset[0] || {});
-        const rowsSiembra = resultSiembra.recordset;
+        const rowsSiembra = resultSiembra.recordset.map((row, index) => ({
+            índice: index + 1,
+            ...row
+        }));
 
-        //Obtener Enfermedades
+        // Obtener Enfermedades
         const resultEnfermedades = await pool.request()
-        .input('usuarioId', sql.VarChar(60), userId)
-        .query(`SELECT * FROM Enfermedades WHERE id_usuario = @usuarioId`);
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT [id tratamiento], [Id Cultivo], [Nombre Cultivo], Ubicacion, 
+                    [Nombre Plaga o Enfermedad], [Insumo Utilizado], [Costo del Insumo], [Cantidad de Insumos], 
+                    [Cantidad de Jornales], [Costo por Jornal] 
+                    FROM Enfermedades WHERE id_usuario = @usuarioId`);
     
-        const columnNamesEnfermedades = Object.keys(resultEnfermedades.recordset[0] || {});
-        const rowsEnfermedades = resultEnfermedades.recordset;
+        const rowsEnfermedades = resultEnfermedades.recordset.map((row, index) => ({
+            índice: index + 1,
+            ...row
+        }));
 
         // Obtener Ventas
         const resultVentas = await pool.request()
-        .input('usuarioId', sql.VarChar(60), userId)
-        .query(`SELECT * FROM Ventas WHERE id_usuario = @usuarioId`);
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT [IdVenta], [IdCultivo], [NombreCultivo], Ubicacion, CajasVendidas, 
+                    PrecioUnitario, TotalVenta 
+                    FROM Ventas WHERE id_usuario = @usuarioId`);
     
-        const columnNamesVentas = Object.keys(resultVentas.recordset[0] || {});
-        const rowsVentas = resultVentas.recordset;
-
-        // Aquí puedes añadir otras tablas como Fertilización, Siembra, Enfermedades, etc.
+        const rowsVentas = resultVentas.recordset.map((row, index) => ({
+            índice: index + 1,
+            ...row
+        }));
 
         // Renderizamos la vista con los datos de las tablas
         res.render('Tablas', {
-            columnNamesVentas,
-            rowsVentas,
-            columnNamesProduccion,
-            rowsProduccion,
-            columnNamesFertilizacion,
-            rowsFertilizacion,
-            columnNamesSiembra,
-            rowsSiembra,
-            columnNamesEnfermedades,
-            rowsEnfermedades,
-            columnNamesTerrenos,
+            columnNamesTerrenos: ["índice", ...Object.keys(resultTerrenos.recordset[0] || {})],
             rowsTerrenos,
-            // Añadir otras tablas aquí
+            columnNamesProduccion: ["índice", ...Object.keys(resultProduccion.recordset[0] || {})],
+            rowsProduccion,
+            columnNamesFertilizacion: ["índice", ...Object.keys(resultFertilizacion.recordset[0] || {})],
+            rowsFertilizacion,
+            columnNamesSiembra: ["índice", ...Object.keys(resultSiembra.recordset[0] || {})],
+            rowsSiembra,
+            columnNamesEnfermedades: ["índice", ...Object.keys(resultEnfermedades.recordset[0] || {})],
+            rowsEnfermedades,
+            columnNamesVentas: ["índice", ...Object.keys(resultVentas.recordset[0] || {})],
+            rowsVentas,
         });
     } catch (error) {
         console.error("Error al obtener las tablas:", error);

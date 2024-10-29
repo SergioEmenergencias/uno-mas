@@ -4,9 +4,7 @@
 
 <div class="container my-5">
     <!-- Formulario para registrar ventas -->
-
-    <form action="/venta" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
-
+    <form action="/agregarVenta" method="POST" class="shadow p-4 rounded bg-light" style="max-width: 700px; margin: auto;">
         
         <!-- Título del formulario -->
         <h1 class="text-center mb-4">Registrar Venta</h1>
@@ -19,22 +17,14 @@
 
         <!-- Campo para el ID del cultivo -->
         <div class="mb-3">
-            <label for="id_cultivo" class="form-label">Código del Cultivo</label>
+            <label for="id_cultivo" class="form-label">Semilla o Cultivo</label>
             <select class="form-control" id="id_cultivo" name="id_cultivo" required>
                 <option value="" disabled selected>Selecciona el código del cultivo</option>
-                <!-- Aquí deberías agregar dinámicamente los IDs de cultivos ya registrados desde la base de datos -->
-               {{#each cultivos}}
+              {{#each cultivos}}
             <option value="{{this.id}}">{{this.cultivo_trabajado}}</option>
             {{/each}}
             </select>
         </div>
-
-        <!-- Campo para el nombre del cultivo -->
-        <div class="mb-3">
-            <label for="nombre_cultivo" class="form-label">Nombre del Cultivo</label>
-            <input type="text" class="form-control" id="nombre_cultivo" name="nombre_cultivo" readonly placeholder="El nombre del cultivo será llenado automáticamente">
-        </div>
-
         <!-- Campo para cajas vendidas de primera clase -->
         <div class="mb-3">
             <label for="cajas_primera" class="form-label">Cajas Vendidas (Primera Clase)</label>

@@ -180,7 +180,7 @@ const crearActividad = async (req, res) => {
         const pool = await getConnection();
         const cultivoResult = await pool.request()
         .input('idCultivo', id_cultivo)
-        .query('SELECT cultivo_trabajado FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+        .query('SELECT [Cultivo Trabajado] AS cultivo_trabajado  FROM [dbo].[Terrenos] WHERE id = @idCultivo');
         const nombreCultivo = cultivoResult.recordset[0].cultivo_trabajado;
         const result = await pool.request()
             .input('fecha', fecha)
@@ -205,25 +205,46 @@ const crearActividad = async (req, res) => {
 // Crear una nueva siembra
 const crearSiembra = async (req, res) => {
     try {
-        const { fechaSiembra, tipoSiembra, id_cultivo,  costo, id_usuario } = req.body;
-        console.log(req.body)
-        const pool = await getConnection();
+        const {
+            fecha_siembra,
+            tipoSiembra,
+            id_cultivo,
+            costo,
+            id_usuario,
+            cantidad_pilones,
+            costo_pilon,
+            cantidad_jornales,
+            costo_jornal
+        } = req.body;
+        
+        console.log(req.body);
+        console.log(req.user.id)
+       const pool = await getConnection();
+        
+        // Obtener el nombre del cultivo desde la tabla Terrenos
         const cultivoResult = await pool.request()
-        .input('idCultivo', id_cultivo)
-        .query('SELECT cultivo_trabajado FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+            .input('idCultivo', id_cultivo)
+            .query('SELECT [Cultivo Trabajado] AS cultivo_trabajado  FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+        
         const nombreCultivo = cultivoResult.recordset[0].cultivo_trabajado;
-        console.log(cultivoResult)
+        
         const result = await pool.request()
-            .input('FechaSiembra', fechaSiembra)
-            .input('TipoSiembra', tipoSiembra)
+            .input('FechaSiembra', fecha_siembra)
             .input('IdCultivo', id_cultivo)
             .input('NombreCultivo', nombreCultivo)
-            .input('Costo', costo)
             .input('id_usuario', req.user.id)
-            .query(`INSERT INTO [dbo].[Siembra] (FechaSiembra, TipoSiembra, IdCultivo, NombreCultivo, costo, id_usuario) 
-                    VALUES (@FechaSiembra, @TipoSiembra, @IdCultivo, @NombreCultivo, @Costo, @id_usuario)`);
-
-        res.status(201).json({ message: 'Siembra creada con éxito', result });
+            .input('CantidadPilones', cantidad_pilones)
+            .input('CostoPorPilon', costo_pilon)
+            .input('CantidadJornales', cantidad_jornales)
+            .input('CostoPorJornal', costo_jornal)
+            .query(`INSERT INTO [dbo].[Siembra] 
+                ([Fecha Siembra],  [Id Cultivo], [Nombre Cultivo],id_usuario, 
+                 [Cantidad de Pilones], [Costo por Pilón], [Cantidad de Jornales], [Costo por Jornal]) 
+                VALUES 
+                (@FechaSiembra, @IdCultivo, @NombreCultivo,  @id_usuario, 
+                 @CantidadPilones, @CostoPorPilon, @CantidadJornales, @CostoPorJornal)`);
+                 req.flash('success', ' registrada con éxito');
+        res.redirect('/siembra')
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al crear siembra', error });
@@ -232,33 +253,55 @@ const crearSiembra = async (req, res) => {
 
 // Crear una nueva fertilización
 const crearFertilizacion = async (req, res) => {
+    const { fecha_fertilizacion, tipo_fertilizacion, id_cultivo, cantidad_quimicos, insumo, costoInsumo, jornales, costoJornal, costoTotal } = req.body;
+console.log(req.body);
     try {
-        const { fecha, tipoFertilizacion, id_cultivo, edadCultivo, insumo, costoInsumo, jornales, costoJornal, costoTotal, id_usuario } = req.body;
         const pool = await getConnection();
-        const cultivoResult = await pool.request()
+    console.log(req.body)
+    // Obtener el nombre del cultivo
+    const cultivoResult = await pool.request()
         .input('idCultivo', id_cultivo)
-        .query('SELECT cultivo_trabajado FROM [dbo].[Terrenos] WHERE id = @idCultivo');
-        const nombreCultivo = cultivoResult.recordset[0].cultivo_trabajado;
-        const result = await pool.request()
+        .query('SELECT [Cultivo Trabajado] AS cultivo_trabajado  FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+    
+    const nombreCultivo = cultivoResult.recordset[0]?.cultivo_trabajado; // Asegúrate de que exista un resultado
 
-            .input('fecha', Date.now)
-
-            .input('fecha', fecha)
-
-            .input('tipoFertilizacion', tipoFertilizacion)
-            .input('idCultivo', id_cultivo)
-            .input('nombreCultivo', nombreCultivo)
-            .input('edadCultivo', edadCultivo)
-            .input('insumo', insumo)
-            .input('costoInsumo', costoInsumo)
-            .input('jornales', jornales)
-            .input('costoJornal', costoJornal)
-            .input('costoTotal', costoTotal)
-            .input('id_usuario', req.user.id)
-            .query(`INSERT INTO [dbo].[Fertilizacion] (fecha, tipoFertilizacion, idCultivo, nombreCultivo, edadCultivo, insumo, costoInsumo, jornales, costoJornal, costoTotal, id_usuario) 
-                    VALUES (@fecha, @tipoFertilizacion, @idCultivo, @nombreCultivo, @edadCultivo, @insumo, @costoInsumo, @jornales, @costoJornal, @costoTotal, @id_usuario)`);
-
-        res.status(201).json({ message: 'Fertilización creada con éxito', result });
+    // Insertar en la tabla Fertilizacion
+    const result = await pool.request()
+        .input('fecha', fecha_fertilizacion)
+        .input('tipoFertilizacion', tipo_fertilizacion)
+        .input('idCultivo', id_cultivo)
+        .input('nombreCultivo', nombreCultivo)
+        .input('insumo', insumo)
+        .input('cantidad_quimico', cantidad_quimicos)
+        .input('costoInsumo', costoInsumo)
+        .input('jornales', jornales)
+        .input('costoJornal', costoJornal)
+        .input('id_usuario', req.user.id)
+        .query(`INSERT INTO [dbo].[Fertilizacion] (
+            [Fecha Fertilizacion],
+            [Tipo de Fertilizacion],
+            [Codigo de Cultivo],
+            [Nombre Cultivo],
+            [Quimico Utilizado],
+            [Costo Quimico],
+            [Cantidad de quimico utilizado],
+            [Cantidad de Jornales],
+            [Costo por Jornal], 
+            id_usuario
+        ) VALUES (
+            @fecha,
+            @tipoFertilizacion,
+            @idCultivo,
+            @nombreCultivo,
+            @insumo,
+            @costoInsumo,
+            @cantidad_quimico,
+            @jornales,
+            @costoJornal,
+            @id_usuario
+        )`);
+        req.flash('success', ' registrada con éxito');
+   res.redirect('/fertilizacion')
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al crear fertilización', error });
@@ -267,90 +310,166 @@ const crearFertilizacion = async (req, res) => {
 
 // Crear un nuevo registro de enfermedad
 const crearEnfermedad = async (req, res) => {
+    const { 
+        id_cultivo, 
+        ubicacion, 
+        nombre_plaga_enfermedad, 
+        insumo_utilizado, 
+        cantidad_insumo, 
+        costo_insumo, 
+        cantidad_jornales, 
+        costo_jornal, 
+        costoTotal 
+    } = req.body;
+
+    console.log(req.body);
+
     try {
-        const { id_cultivo, ubicacion, actividad, enfermedad, insumoUtilizado, cantidad, costoInsumo, jornales, costoJornal, costoTotal, id_usuario } = req.body;
         const pool = await getConnection();
+
+        // Obtener el nombre del cultivo
         const cultivoResult = await pool.request()
-        .input('idCultivo', id_cultivo)
-        .query('SELECT cultivo_trabajado FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+            .input('idCultivo', id_cultivo)
+            .query('SELECT [Cultivo Trabajado] AS cultivo_trabajado  FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+        
+        // Verificar que se obtuvo un resultado
+        if (!cultivoResult.recordset.length) {
+            return res.status(404).json({ message: 'Cultivo no encontrado' });
+        }
+
         const nombreCultivo = cultivoResult.recordset[0].cultivo_trabajado;
+
+        // Insertar en la tabla Enfermedades
         const result = await pool.request()
-            .input('idCultivo',id_cultivo)
+            .input('idCultivo', id_cultivo)
             .input('nombreCultivo', nombreCultivo)
             .input('ubicacion', ubicacion)
-            .input('actividad', actividad)
-            .input('enfermedad', enfermedad)
-            .input('insumoUtilizado', insumoUtilizado)
-            .input('cantidad', cantidad)
-            .input('costoInsumo', costoInsumo)
-            .input('jornales', jornales)
-            .input('costoJornal', costoJornal)
-            .input('costoTotal', costoTotal)
+            .input('enfermedad', nombre_plaga_enfermedad)
+            .input('insumoUtilizado', insumo_utilizado)
+            .input('cantidad', cantidad_insumo)
+            .input('costoInsumo', costo_insumo)
+            .input('jornales', cantidad_jornales)
+            .input('costoJornal', costo_jornal)
             .input('id_usuario', req.user.id)
-            .query(`INSERT INTO [dbo].[Enfermedades] (idCultivo, nombreCultivo, ubicacion, actividad, enfermedad, insumoUtilizado, cantidad, costoInsumo, jornales, costoJornal, costoTotal, id_usuario) 
-                    VALUES (@idCultivo, @nombreCultivo, @ubicacion, @actividad, @enfermedad, @insumoUtilizado, @cantidad, @costoInsumo, @jornales, @costoJornal, @costoTotal, @id_usuario)`);
-
-        res.status(201).json({ message: 'Enfermedad registrada con éxito', result });
+            .query(`INSERT INTO [dbo].[Enfermedades] (
+                [Id Cultivo],
+                [Nombre Cultivo],
+                [Ubicacion],
+                [Nombre Plaga o Enfermedad],
+                [Insumo Utilizado],
+                [Costo del Insumo],
+                [Cantidad de Insumos],
+                [Cantidad de Jornales],
+                [Costo por Jornal],
+                id_usuario
+            ) VALUES (
+                @idCultivo,
+                @nombreCultivo,
+                @ubicacion,
+                @enfermedad,
+                @insumoUtilizado,
+                @costoInsumo,
+                @cantidad,
+                @jornales,
+                @costoJornal,
+                @id_usuario
+            )`);
+            req.flash('success', ' registrada con éxito');
+       res.redirect('/Enfermedades');
     } catch (error) {
-        console.error(error);
+        console.error('Error al registrar enfermedad:', error);
         res.status(500).json({ message: 'Error al registrar enfermedad', error });
     }
 };
+
 // controllers/actividadController.js
 
 
 const prepararTerreno = async (req, res) => {
     try {
-        console.log(req.user.id)
-        const { fecha, actividad, cultivo_trabajado, extension_trabajada, insumos_utilizados, costo_insumos, jornales, costo_jornales, costo_total } = req.body;
+        const { 
+            fecha_preparacion, 
+            actividad, 
+            cantidad_insumos, 
+            cultivo_trabajado, 
+            total_inversion, 
+            insumos_utilizados, 
+            costo_insumos, 
+            jornales, 
+            costo_jornal 
+        } = req.body;
+
+        // Conversión de tipos y eliminación del prefijo 'Q'
+        const parsedCantidadInsumos = parseInt(cantidad_insumos, 10);
+        const parsedCostoInsumos = parseFloat(costo_insumos);
+        const parsedJornales = parseInt(jornales, 10);
+        const parsedCostoJornales = parseFloat(costo_jornal.replace('Q', '').trim());
+        const parsedTotalInversion = parseFloat(total_inversion.replace('Q', '').trim());
+
         const pool = await getConnection();
 
         const result = await pool.request()
-
-            .input('fecha', Date.now())
-
-            .input('fecha', fecha)
-
-            .input('actividad', actividad)
+            .input('fecha', fecha_preparacion)
             .input('cultivo_trabajado', cultivo_trabajado)
-            .input('extension_trabajada', extension_trabajada)
+            .input('actividad', actividad)
             .input('insumos_utilizados', insumos_utilizados)
-            .input('costo_insumos', costo_insumos)
-            .input('jornales', jornales)
-            .input('costo_jornales', costo_jornales)
-            .input('costo_total', costo_total)
+            .input('cantidadinsumos', parsedCantidadInsumos)
+            .input('costo_insumos', parsedCostoInsumos)
+            .input('jornales', parsedJornales)
+            .input('costo_jornales', parsedCostoJornales)
+            .input('totalinversion', parsedTotalInversion)
             .input('id_usuario', req.user.id)
-            .query(`INSERT INTO [dbo].[Terrenos] (fecha, actividad, cultivo_trabajado, extension_trabajada, insumos_utilizados, costo_insumos, jornales, costo_jornales, costo_total, id_usuario) 
-                    VALUES (@fecha, @actividad, @cultivo_trabajado, @extension_trabajada, @insumos_utilizados, @costo_insumos, @jornales, @costo_jornales, @costo_total, @id_usuario)`);
+            .query(`INSERT INTO [dbo].[Terrenos] 
+                ([Cultivo Trabajado], [Fecha], [Insumos Utilizados], [Cantidad de Insumos], 
+                [Costo por Insumo], [Total de Inversion], [jornales], [Costo por Jornal], 
+                id_usuario, [Actividad]) 
+                VALUES (@cultivo_trabajado, @fecha, @insumos_utilizados, @cantidadinsumos, 
+                @costo_insumos, @totalinversion, @jornales, @costo_jornales, @id_usuario, @actividad)`);
 
-        res.status(201).json({ message: 'Actividad registrada con éxito', result });
+        // Usar flash para enviar un mensaje de éxito
+        req.flash('success', 'Actividad registrada con éxito');
+
+        // Redirigir a otra página (por ejemplo, la página de actividades)
+        res.redirect('/preparacionTerreno');
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error al registrar actividad', error });
+        req.flash('error_msg', 'Error al registrar actividad');
+        res.redirect('/preparacionTerreno'); // Redirigir en caso de error también
     }
 };
 
+
 const crearProduccion = async (req, res) => {
     try {
-        const { id_cultivo, nombre_cultivo, ubicacion, fecha, jornales, costo_jornales, cajas_cosechadas, id_usuario } = req.body; // Asegúrate de que id_usuario esté en el cuerpo de la solicitud
-        const pool = await getConnection();
+        const { id_cultivo,   fecha_produccion, cantidad_jornales, costo_jornal, cantidad_cajas_primera,cantidad_cajas_segunda,cantidad_cajas_tercera, id_usuario } = req.body; // Asegúrate de que id_usuario esté en el cuerpo de la solicitud
+       console.log(req.body);
+         const pool = await getConnection();
         const cultivoResult = await pool.request()
         .input('idCultivo', id_cultivo)
-        .query('SELECT cultivo_trabajado FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+        .query('SELECT [Cultivo Trabajado] AS cultivo_trabajado  FROM [dbo].[Terrenos] WHERE id = @idCultivo');
         const nombreCultivo = cultivoResult.recordset[0].cultivo_trabajado;
         const result = await pool.request()
             .input('id_cultivo', id_cultivo)
             .input('nombre_cultivo', nombreCultivo)
-            .input('ubicacion', ubicacion)
-            .input('fecha', fecha)
-            .input('jornales', jornales)
-            .input('costo_jornales', costo_jornales)
-            .input('cajas_cosechadas', cajas_cosechadas)
+            .input('fecha', fecha_produccion)
+            .input('jornales', cantidad_jornales)
+            .input('costo_jornales', costo_jornal)
+            .input('cajas_cosechadas1', cantidad_cajas_primera)
+            .input('cajas_cosechadas2', cantidad_cajas_segunda)
+            .input('cajas_cosechadas3', cantidad_cajas_tercera)
             .input('id_usuario', req.user.id)  // Se agrega la referencia al usuario
-            .query(`INSERT INTO [dbo].[Produccion] (id_cultivo, nombre_cultivo, ubicacion, fecha, jornales, costo_jornales, cajas_cosechadas, id_usuario) 
-                    VALUES (@id_cultivo, @nombre_cultivo, @ubicacion, @fecha, @jornales, @costo_jornales, @cajas_cosechadas, @id_usuario)`);
+            .query(`INSERT INTO [dbo].[Produccion] ([Fecha]
+      ,[Id Cultivo]
+      ,[Nombre Cultivo]
+      ,[Cantidad de Jornales]
+      ,[Costo Jornal]
+      ,[Cantidad de Cajas Primera Clase]
+      ,[Cantidad de Cajas Segunda Clase]
+      ,[Cantidad de Cajas Tercera Clase]
+      ,id_usuario) 
+                    VALUES ( @fecha, @id_cultivo, @nombre_cultivo,  @jornales, @costo_jornales, @cajas_cosechadas1, @cajas_cosechadas2, @cajas_cosechadas3, @id_usuario)`);
 
-        res.status(201).json({ message: 'Producción registrada con éxito', result });
+       res.redirect('/produccion')
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error al registrar producción', error });
@@ -366,7 +485,7 @@ const crearVentas = async (req, res) => {
         // Buscar el nombre del cultivo en la base de datos usando el id_cultivo
         const cultivoResult = await pool.request()
             .input('idCultivo', id_cultivo)
-            .query('SELECT cultivo_trabajado FROM [dbo].[Terrenos] WHERE id = @idCultivo');
+            .query('SELECT [Cultivo Trabajado] AS cultivo_trabajado  FROM [dbo].[Terrenos] WHERE id = @idCultivo');
         
         const nombreCultivo = cultivoResult.recordset[0].cultivo_trabajado;
         
