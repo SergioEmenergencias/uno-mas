@@ -2,7 +2,7 @@ const app= require('express')
 const { cargarActividades, cargahome, cargarForos, cargarFormularioCultivos, cargaformularioCosechas, cargaInformacionCultivo, preparacionTerreno, siembra, fertilizacion, enfermedades, produccion, venta, cargalogin }=require('../Controllers/CargaControllers')
 const { agregarPost, leerPublicaciones, prepararTerreno, crearSiembra, crearFertilizacion, crearEnfermedad, crearProduccion, crearVentas, leerForos } = require('../Controllers/HomeControllers')
 const Verificaruser = require('../Middleware/Verificaruser')
-const { insertarCosecha, insertarPlantacion, obtenerCosechas, obtenerPlantaciones, insertarCultivo, obtenerTodasTablas } = require('../Controllers/ActividadesControllers')
+const { insertarCosecha, insertarPlantacion, obtenerCosechas, obtenerPlantaciones, insertarCultivo, obtenerTodasTablas,descargarInforme } = require('../Controllers/ActividadesControllers')
 const router=app.Router()
 
 router.get('/', cargalogin)
