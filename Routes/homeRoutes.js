@@ -6,6 +6,7 @@ const { insertarCosecha, insertarPlantacion, obtenerCosechas, obtenerPlantacione
 const router=app.Router()
 
 router.get('/', cargalogin)
+router.get('/descargarInforme',Verificaruser,descargarInforme);
 router.get('/principal',Verificaruser,cargahome)
 router.get('/publicandoymas',Verificaruser,leerPublicaciones)
 router.get('/Acciones',Verificaruser,cargarActividades)
