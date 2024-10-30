@@ -274,11 +274,53 @@ async function obtenerTodasTablas(req, res) {
     }
 }
 
+async function descargarInforme(req, res) {
+    try {
+        const userId = req.user.id;
+        const pool = await getConnection();
+
+        if (!userId) {
+            return res.status(400).json({ message: "Falta el ID del usuario" });
+        }
+
+        // Obtén los datos de todas las tablas necesarias para el informe
+        const tablasDatos = [];
+
+        const resultCosechas = await pool.request()
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT * FROM Cosechas WHERE id_usuario = @usuarioId`);
+        tablasDatos.push({ titulo: 'Cosechas', rows: resultCosechas.recordset });
+
+        const resultCultivos = await pool.request()
+            .input('usuarioId', sql.VarChar(50), userId)
+            .query(`SELECT * FROM Cultivos WHERE id_usuario = @usuarioId`);
+        tablasDatos.push({ titulo: 'Cultivos', rows: resultCultivos.recordset });
+
+        // Llama a la función para generar el PDF
+        const filePath = await generarInformePdf(userId, tablasDatos);
+
+        // Envía el archivo al cliente para su descarga
+        res.download(filePath, `informe_${userId}.pdf`, (err) => {
+            if (err) {
+                console.error("Error al descargar el informe PDF:", err);
+                res.status(500).json({ message: "Error al descargar el informe PDF" });
+            }
+
+            // Elimina el archivo temporal después de enviarlo
+            fs.unlinkSync(filePath);
+        });
+
+    } catch (error) {
+        console.error("Error al generar el informe PDF:", error);
+        res.status(500).json({ message: "Error interno al generar el informe PDF" });
+    }
+}
 module.exports = {
     insertarCultivo,
     obtenerPlantaciones,
     insertarCosecha,
     obtenerCosechas,
     publicAgricultores,
-    obtenerTodasTablas
+    obtenerTodasTablas,
+    descargarInforme,
 };
