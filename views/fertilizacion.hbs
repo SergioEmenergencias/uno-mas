@@ -108,9 +108,9 @@
 
     // Añadir eventos para calcular el costo total cuando los campos cambian
     document.getElementById('cantidad_quimicos').addEventListener('input', calcularCostoTotal);
-    document.getElementById('costo_quimico').addEventListener('input', calcularCostoTotal);
-    document.getElementById('cantidad_jornales').addEventListener('input', calcularCostoTotal);
-    document.getElementById('costo_jornal').addEventListener('input', calcularCostoTotal);
+    document.getElementById('costoInsumo').addEventListener('input', calcularCostoTotal);
+    document.getElementById('jornales').addEventListener('input', calcularCostoTotal);
+    document.getElementById('costoJornal').addEventListener('input', calcularCostoTotal);
 
     // Aquí puedes agregar lógica para obtener el nombre del cultivo automáticamente basado en el ID seleccionado
     document.getElementById('id_cultivo').addEventListener('change', function() {
