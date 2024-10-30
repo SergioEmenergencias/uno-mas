@@ -19,7 +19,7 @@ const sesiones = async (req, res) => {
         });
     } catch (error) {
         console.log(error)
-        return res.redirect("/auth/");
+        return res.redirect("/");
     }
 };
 
@@ -65,7 +65,7 @@ const insertarUsuarios = async (req, res) => {
         console.log('Usuario registrado en SQL Server con ID de MongoDB');
 
         // Redirigir a la página de login si todo fue exitoso
-        return res.redirect('/auth/');
+        return res.redirect('/');
     } catch (error) {
         console.error(error);
         res.status(400).json({ message: error.message });
@@ -77,7 +77,7 @@ const cerrarsesion = (req, res) => {
     req.logout(function (err) {
         if (err) {
             req.flash('error', "Error al cerrar sesión"); // Mensaje flash de error
-            return res.redirect('/auth/');
+            return res.redirect('/');
         }
         // Elimina la cookie que almacena el token
         res.clearCookie('secret-name-yolo');
