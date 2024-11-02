@@ -1,4 +1,5 @@
 const { getConnection } = require('../db/sqlMongoose');
+const path = require('path'); 
 const sql=require('mssql')
 const publicAgricultores = async (req, res) => {
     const { actividad1, actividad2, actividad3, actividad4 } = req.body;
