@@ -356,10 +356,10 @@ async function descargarInforme(req, res) {
         const pool = await getConnection();
 
         if (!userId) {
+            console.error("ID de usuario no proporcionado.");
             return res.status(400).json({ message: "Falta el ID del usuario" });
         }
 
-        // Obtener datos de todas las tablas
         console.log("Obteniendo datos de todas las tablas para el informe...");
         const [rowsTerrenos, rowsProduccion, rowsFertilizacion, rowsSiembra, rowsEnfermedades, rowsVentas] = await Promise.all([
             obtenerDatosTerrenos(pool, userId),
@@ -369,6 +369,8 @@ async function descargarInforme(req, res) {
             obtenerDatosEnfermedades(pool, userId),
             obtenerDatosVentas(pool, userId),
         ]);
+
+        console.log("Datos obtenidos para todas las tablas.");
 
         const tablasDatos = [
             { titulo: 'Terrenos', rows: rowsTerrenos },
@@ -380,6 +382,7 @@ async function descargarInforme(req, res) {
         ].filter(tabla => tabla.rows.length > 0); // Filtrar tablas vacías
 
         if (tablasDatos.length === 0) {
+            console.error("No se encontraron datos para el informe.");
             return res.status(400).json({ message: "No se encontraron datos para el informe" });
         }
 
@@ -401,6 +404,7 @@ async function descargarInforme(req, res) {
         res.status(500).json({ message: "Error interno al generar el informe PDF" });
     }
 }
+
 
 
 async function generarInformePdf(userId, tablasDatos) {
