@@ -83,9 +83,10 @@ const cargalogin = (req, res) => {
 const cargarRegister=(req,res)=>{
     res.render('register',{messages: req.flash('success'),user:req.user })
 }
-const cargahome=(req,res)=>{
-    res.render('home',{user:req.user} )
-}
+const cargahome = (req, res) => {
+    console.log("Usuario en home:", req.user); // Para verificar si `user` está disponible
+    res.render('home', { user: req.user }); // Envía el usuario autenticado a la vista
+};
 const cargarForos=(req,res)=>{
     res.render('foros',console.log(req.user),{messages: req.flash('success'),user:req.user })
 }
