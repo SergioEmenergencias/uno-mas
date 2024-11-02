@@ -1,7 +1,9 @@
-const { getConnection } = require('../db/sqlMongoose');
+const PDFDocument = require('pdfkit');
 const fs = require('fs');
-const path = require('path'); 
+const path = require('path');
+const { getConnection } = require('../db/sqlMongoose');
 const sql=require('mssql')
+const { format } = require('date-fns'); // Asegúrate de instalar la librería date-fns con 'npm install date-fns'
 const publicAgricultores = async (req, res) => {
     const { actividad1, actividad2, actividad3, actividad4 } = req.body;
 
