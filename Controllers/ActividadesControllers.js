@@ -274,46 +274,210 @@ async function obtenerTodasTablas(req, res) {
     }
 }
 
+async function obtenerDatosTerrenos(pool, userId) {
+    const result = await pool.request()
+        .input('usuarioId', sql.VarChar(50), userId)
+        .query(`SELECT  [Cultivo Trabajado], Fecha, [Insumos Utilizados], [Cantidad de Insumos], 
+                [Costo por Insumo], [Total de Inversion], jornales, [Costo por Jornal], Actividad 
+                FROM Terrenos WHERE id_usuario = @usuarioId`);
+    return result.recordset.map((row, index) => ({
+        índice: index + 1,
+        ...row
+    }));
+}
+
+async function obtenerDatosProduccion(pool, userId) {
+    const result = await pool.request()
+        .input('usuarioId', sql.VarChar(50), userId)
+        .query(`SELECT  Fecha,  [Nombre Cultivo], [Cantidad de Jornales], 
+                [Costo Jornal], [Cantidad de Cajas Primera Clase], [Cantidad de Cajas Segunda Clase], 
+                [Cantidad de Cajas Tercera Clase] 
+                FROM Produccion WHERE id_usuario = @usuarioId`);
+    return result.recordset.map((row, index) => ({
+        índice: index + 1,
+        ...row
+    }));
+}
+
+async function obtenerDatosFertilizacion(pool, userId) {
+    const result = await pool.request()
+        .input('usuarioId', sql.VarChar(50), userId)
+        .query(`SELECT  [Fecha Fertilizacion], [Tipo de Fertilizacion], 
+                 [Nombre Cultivo], [Quimico Utilizado], [Costo Quimico], 
+                [Cantidad de quimico utilizado], [Cantidad de Jornales], [Costo por Jornal] 
+                FROM Fertilizacion WHERE id_usuario = @usuarioId`);
+    return result.recordset.map((row, index) => ({
+        índice: index + 1,
+        ...row
+    }));
+}
+
+async function obtenerDatosSiembra(pool, userId) {
+    const result = await pool.request()
+        .input('usuarioId', sql.VarChar(50), userId)
+        .query(`SELECT  [Fecha Siembra],  [Nombre Cultivo], 
+                [Cantidad de Pilones], [Costo por Pilón], [Cantidad de Jornales], [Costo por Jornal] 
+                FROM Siembra WHERE id_usuario = @usuarioId`);
+    return result.recordset.map((row, index) => ({
+        índice: index + 1,
+        ...row
+    }));
+}
+
+async function obtenerDatosEnfermedades(pool, userId) {
+    const result = await pool.request()
+        .input('usuarioId', sql.VarChar(50), userId)
+        .query(`SELECT   [Nombre Cultivo], Ubicacion, 
+                [Nombre Plaga o Enfermedad], [Insumo Utilizado], [Costo del Insumo], [Cantidad de Insumos], 
+                [Cantidad de Jornales], [Costo por Jornal] 
+                FROM Enfermedades WHERE id_usuario = @usuarioId`);
+    return result.recordset.map((row, index) => ({
+        índice: index + 1,
+        ...row
+    }));
+}
+
+async function obtenerDatosVentas(pool, userId) {
+    const result = await pool.request()
+        .input('usuarioId', sql.VarChar(50), userId)
+        .query(`SELECT  [NombreCultivo], Ubicacion, CajasVendidas, 
+                PrecioUnitario, TotalVenta 
+                FROM Ventas WHERE id_usuario = @usuarioId`);
+    return result.recordset.map((row, index) => ({
+        índice: index + 1,
+        ...row
+    }));
+}
 async function descargarInforme(req, res) {
     try {
-        const userId = req.user.id;
+        console.log("Iniciando descarga del informe...");
+        const userId = req.user.id; // Asumimos que el ID del usuario está en req.user
         const pool = await getConnection();
 
         if (!userId) {
             return res.status(400).json({ message: "Falta el ID del usuario" });
         }
 
-        // Obtén los datos de todas las tablas necesarias para el informe
-        const tablasDatos = [];
+        // Obtener datos de todas las tablas
+        console.log("Obteniendo datos de todas las tablas para el informe...");
+        const [rowsTerrenos, rowsProduccion, rowsFertilizacion, rowsSiembra, rowsEnfermedades, rowsVentas] = await Promise.all([
+            obtenerDatosTerrenos(pool, userId),
+            obtenerDatosProduccion(pool, userId),
+            obtenerDatosFertilizacion(pool, userId),
+            obtenerDatosSiembra(pool, userId),
+            obtenerDatosEnfermedades(pool, userId),
+            obtenerDatosVentas(pool, userId),
+        ]);
 
-        const resultCosechas = await pool.request()
-            .input('usuarioId', sql.VarChar(50), userId)
-            .query(`SELECT * FROM Cosechas WHERE id_usuario = @usuarioId`);
-        tablasDatos.push({ titulo: 'Cosechas', rows: resultCosechas.recordset });
+        const tablasDatos = [
+            { titulo: 'Terrenos', rows: rowsTerrenos },
+            { titulo: 'Producción', rows: rowsProduccion },
+            { titulo: 'Fertilización', rows: rowsFertilizacion },
+            { titulo: 'Siembra', rows: rowsSiembra },
+            { titulo: 'Enfermedades', rows: rowsEnfermedades },
+            { titulo: 'Ventas', rows: rowsVentas },
+        ].filter(tabla => tabla.rows.length > 0); // Filtrar tablas vacías
 
-        const resultCultivos = await pool.request()
-            .input('usuarioId', sql.VarChar(50), userId)
-            .query(`SELECT * FROM Cultivos WHERE id_usuario = @usuarioId`);
-        tablasDatos.push({ titulo: 'Cultivos', rows: resultCultivos.recordset });
+        if (tablasDatos.length === 0) {
+            return res.status(400).json({ message: "No se encontraron datos para el informe" });
+        }
+
+        console.log("Generando PDF del informe...");
 
         // Llama a la función para generar el PDF
         const filePath = await generarInformePdf(userId, tablasDatos);
 
-        // Envía el archivo al cliente para su descarga
-        res.download(filePath, `informe_${userId}.pdf`, (err) => {
+        // Envía el PDF como respuesta
+        res.download(filePath, (err) => {
             if (err) {
-                console.error("Error al descargar el informe PDF:", err);
+                console.error("Error al enviar el archivo PDF:", err);
                 res.status(500).json({ message: "Error al descargar el informe PDF" });
             }
-
-            // Elimina el archivo temporal después de enviarlo
-            fs.unlinkSync(filePath);
         });
 
     } catch (error) {
         console.error("Error al generar el informe PDF:", error);
         res.status(500).json({ message: "Error interno al generar el informe PDF" });
     }
+}
+
+
+async function generarInformePdf(userId, tablasDatos) {
+    console.log("Iniciando generación del informe PDF...");
+    return new Promise((resolve, reject) => {
+        const informesDir = path.join(__dirname, 'informes');
+
+        if (!fs.existsSync(informesDir)) {
+            fs.mkdirSync(informesDir, { recursive: true });
+            console.log("Carpeta 'informes' creada.");
+        }
+
+        const doc = new PDFDocument();
+        const filePath = path.join(informesDir, `informe_${userId}.pdf`);
+        const writeStream = fs.createWriteStream(filePath);
+        doc.pipe(writeStream);
+
+        // Añadir título del informe
+        doc.fontSize(20).text(`Informe de Usuario ${userId}`, { align: 'center' }).moveDown(2);
+
+        tablasDatos.forEach((tabla, index) => {
+            if (index > 0) {
+                doc.addPage();  // Nueva página para cada tabla
+            }
+
+            // Título de la tabla
+            doc.fontSize(16).text(tabla.titulo, { underline: true }).moveDown(0.5);
+
+            const headers = Object.keys(tabla.rows[0] || {});
+            const columnWidth = (doc.page.width - 80) / headers.length;
+            const rowHeight = 70; // Altura de cada fila (aprox. 2.5 cm)
+            let startX = 40;
+            let startY = doc.y;
+
+            // Dibujar encabezados de la tabla con fondo
+            headers.forEach((header, i) => {
+                // Fondo de encabezado
+                doc.rect(startX + i * columnWidth, startY, columnWidth, rowHeight).fillAndStroke('#e0e0e0', 'black');
+                doc.fillColor('black').fontSize(12).text(header, startX + i * columnWidth, startY + 7, { width: columnWidth, align: 'center' });
+            });
+
+            // Espacio debajo de los encabezados
+            startY += rowHeight;
+
+            // Dibujar filas de la tabla con bordes
+            tabla.rows.forEach(row => {
+                headers.forEach((header, i) => {
+                    let value = row[header] !== undefined ? String(row[header]) : '';
+
+                    if (/fecha/i.test(header) && Date.parse(value)) {
+                        const fecha = new Date(value);
+                        value = format(fecha, 'dd/MM/yyyy HH:mm:ss');
+                    }
+
+                    // Dibuja el borde y coloca el texto en la celda
+                    doc.rect(startX + i * columnWidth, startY, columnWidth, rowHeight).stroke();
+                    doc.text(value, startX + i * columnWidth + 5, startY + 7, { width: columnWidth - 10, align: 'center' });
+                });
+
+                startY += rowHeight; // Espacio entre filas
+            });
+
+            // Mover hacia abajo después de cada tabla para espacio adicional
+            doc.moveDown(2);
+        });
+
+        doc.end();
+
+        writeStream.on('finish', () => {
+            console.log("Informe PDF generado exitosamente.");
+            resolve(filePath);
+        });
+
+        writeStream.on('error', (err) => {
+            console.error("Error al escribir el informe PDF:", err);
+            reject(err);
+        });
+    });
 }
 module.exports = {
     insertarCultivo,
